@@ -1,0 +1,10 @@
+{
+  "name": "gestor-eventos",
+  "version": "1.0.0",
+  "description": "Gestor de eventos",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
