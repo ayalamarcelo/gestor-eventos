@@ -1,7 +1,6 @@
 const express = require('express');
 const eventRouter = require(`./Routers/eventRouter`)
-const HOSTNAME = '127.0.0.1';
-const PORT = 3008;
+const { PORT, HOSTNAME } = require('./database/config');
 const app = express();
 
 app.use(express.json());
