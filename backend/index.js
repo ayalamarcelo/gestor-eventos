@@ -1,5 +1,5 @@
 const express = require('express');
-const eventRouter = require(`./Routers/eventRouter`)
+const eventRouter = require(`./routers/eventRouter`)
 const { PORT, HOSTNAME } = require('./database/config');
 const app = express();
 
