@@ -9,4 +9,7 @@ const getEventById = async (id) => {
 const deleteEventById = async (id) => {
   return await eventRepository.deleteEventById(id);
 };
-module.exports = { getAll, getEventById, deleteEventById };
+const updateEventById = async (id, evento) => {
+  return await eventRepository.updateEventById(id, evento)
+}
+module.exports = { getAll, getEventById, deleteEventById, updateEventById };
