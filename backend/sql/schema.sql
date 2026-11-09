@@ -1,5 +1,5 @@
-
 DROP TABLE IF EXISTS Confirmaciones;
+DROP TABLE IF EXISTS Invitados;
 DROP TABLE IF EXISTS Eventos;
 DROP TABLE IF EXISTS Usuarios;
 GO
@@ -11,7 +11,6 @@ CREATE TABLE Usuarios (
     creado_en DATETIME2 NOT NULL DEFAULT SYSDATETIME()
 );
 GO
-
 
 CREATE TABLE Eventos (
     id INT IDENTITY(1,1) PRIMARY KEY,
@@ -27,31 +26,42 @@ CREATE TABLE Eventos (
 );
 GO
 
+CREATE TABLE Invitados (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    evento_id INT NOT NULL,
+    nombre NVARCHAR(100) NOT NULL,
+    codigo VARCHAR(12) NOT NULL UNIQUE,
+    creado_en DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
+    CONSTRAINT FK_Invitados_Eventos FOREIGN KEY (evento_id)
+        REFERENCES Eventos(id) ON DELETE CASCADE
+);
+GO
 
 CREATE TABLE Confirmaciones (
     id INT IDENTITY(1,1) PRIMARY KEY,
-    evento_id INT NOT NULL,
-    nombre_invitado NVARCHAR(100) NOT NULL,
+    invitado_id INT NOT NULL UNIQUE,
     asiste BIT NOT NULL,
     cantidad_acompanantes INT NOT NULL DEFAULT 0,
     restriccion VARCHAR(20) NOT NULL DEFAULT 'ninguna',
     detalle_restriccion NVARCHAR(200) NULL,
     creado_en DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
-    CONSTRAINT FK_Confirmaciones_Eventos FOREIGN KEY (evento_id)
-        REFERENCES Eventos(id) ON DELETE CASCADE,
+    CONSTRAINT FK_Confirmaciones_Invitados FOREIGN KEY (invitado_id)
+        REFERENCES Invitados(id) ON DELETE CASCADE,
     CONSTRAINT CHK_Confirmaciones_Restriccion CHECK (
         restriccion IN ('ninguna', 'vegetariano', 'celiaco', 'alergia', 'otra')
+    ),
+    CONSTRAINT CHK_Confirmaciones_SiNoAsiste CHECK (
+        (asiste = 1 AND cantidad_acompanantes >= 0) OR
+        (asiste = 0 AND cantidad_acompanantes = 0 AND restriccion = 'ninguna' AND detalle_restriccion IS NULL)
     )
 );
 GO
-
 
 SET IDENTITY_INSERT Usuarios ON;
 INSERT INTO Usuarios (id, nombre, email)
 VALUES (1, 'Organizador', 'organizador@thegathering.com');
 SET IDENTITY_INSERT Usuarios OFF;
 GO
-
 
 SET IDENTITY_INSERT Eventos ON;
 INSERT INTO Eventos (id, titulo, descripcion, fecha_hora, direccion, codigo, organizador_id)
@@ -67,11 +77,24 @@ VALUES (
 SET IDENTITY_INSERT Eventos OFF;
 GO
 
-INSERT INTO Confirmaciones (evento_id, nombre_invitado, asiste, cantidad_acompanantes, restriccion, detalle_restriccion)
+SET IDENTITY_INSERT Invitados ON;
+INSERT INTO Invitados (id, evento_id, nombre, codigo)
 VALUES
-    (1, 'Matias Martinez', 1, 2, 'ninguna', NULL),
-    (1, 'Marcelo Ayala', 1, 0, 'vegetariano', NULL),
-    (1, 'Gisela Ramirez ', 1, 1, 'celiaco', NULL),
-    (1, 'Sol Diaz Real', 1, 0, 'alergia', 'Alergia al maní y frutos secos'),
-    (1, 'Sebastian Romero', 0, 0, 'ninguna', NULL);
+    (1, 1, 'Matias Martinez', 'INV-MAT001'),
+    (2, 1, 'Marcelo Ayala', 'INV-MAR002'),
+    (3, 1, 'Gisela Ramirez', 'INV-GIS003'),
+    (4, 1, 'Sol Diaz Real', 'INV-SOL004'),
+    (5, 1, 'Sebastian Romero', 'INV-SEB005'),
+    (6, 1, 'Juan Perez', 'INV-GEN006');
+SET IDENTITY_INSERT Invitados OFF;
 GO
+
+INSERT INTO Confirmaciones (invitado_id, asiste, cantidad_acompanantes, restriccion, detalle_restriccion)
+VALUES
+    (1, 1, 2, 'ninguna', NULL),
+    (2, 1, 0, 'vegetariano', NULL),
+    (3, 1, 1, 'celiaco', NULL),
+    (4, 1, 0, 'alergia', 'Alergia al maní y frutos secos'),
+    (5, 0, 0, 'ninguna', NULL);
+GO
+
