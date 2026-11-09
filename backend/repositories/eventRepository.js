@@ -14,15 +14,26 @@ const getAll = async () => {
 };
 
 const getEventById = async (id) => {
-    const pool = await getSQLConnection();
     try {
+        const pool = await getSQLConnection();
         const resultado = await pool.request()
         .input('id', sql.Int, id)
         .query(queries.getEventById);
-        return resultado.recordset;
+        return resultado.recordset[0];
     }
     catch (error) {
-        throw new Error('Error en eventRepository.getEvent: ' + error.message);
+        throw new Error('Error en eventRepository.getEventById: ' + error.message);
     }
 }
-module.exports = { getAll, getEventById };
+const deleteEventById = async (id) => {
+    try {
+        const pool = await getSQLConnection();
+        const resultado = await pool.request()
+            .input('id', sql.Int, id)
+            .query(queries.deleteEventById);
+        return resultado.rowsAffected[0];
+    } catch (error) {
+        throw new Error('Error en eventRepository.deleteEventById: ' + error.message);
+    }
+}
+module.exports = { getAll, getEventById, deleteEventById};
