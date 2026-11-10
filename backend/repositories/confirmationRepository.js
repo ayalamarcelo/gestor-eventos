@@ -1,6 +1,7 @@
 const sql = require('mssql');
 const { getSQLConnection } = require('../database/connection');
 const queries = require('../database/queries');
+const { get } = require('../routers/confirmationRouter');
 
 const ejecutar = async (nombre, callback) => {
     try {
@@ -42,9 +43,34 @@ const updateByCodigo = (codigo, datos) =>
         return resultado.rowsAffected[0];
     });
 
+const getByInvitado = (eventoId, invitadoId, organizadorId) =>
+    ejecutar('getByInvitado', async (request) => {
+        const r = await conOrganizador(request, eventoId, invitadoId, organizadorId)
+            .query(queries.getConfirmacionDeEvento);
+        return r.recordset[0] || null;
+    });
 
+const updateByInvitado = (eventoId, invitadoId, organizadorId, datos) =>
+    ejecutar('updateByInvitado', async (request) => {
+        const r = await conDatos(
+            conOrganizador(request, eventoId, invitadoId, organizadorId),
+            datos
+        ).query(queries.updateConfirmacionDeEvento);
+        return r.rowsAffected[0];
+    });
+
+const removeByInvitado = (eventoId, invitadoId, organizadorId) =>
+    ejecutar('removeByInvitado', async (request) => {
+        const r = await conOrganizador(request, eventoId, invitadoId, organizadorId)
+            .query(queries.deleteConfirmacionDeEvento);
+        return r.rowsAffected[0];
+    });
+    
 module.exports = {
-  existeInvitado,
-  getByCodigo,
-  updateByCodigo
+    existeInvitado,
+    getByCodigo,
+    updateByCodigo,
+    getByInvitado,
+    updateByInvitado,
+    removeByInvitado
 };

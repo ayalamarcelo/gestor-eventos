@@ -88,8 +88,29 @@ const updateByCodigo = async (codigoCrudo, body) => {
     return confirmationRepository.getByCodigo(codigo);
 };
 
+const updateByInvitado = async (eventoIdCrudo, invitadoIdCrudo, organizadorId, body) => {
+    const eventoId = validarId(eventoIdCrudo, 'eventoId');
+    const invitadoId = validarId(invitadoIdCrudo, 'invitadoId');
+    const datos = validarDatos(body);
+    const filas = await confirmationRepository.updateByInvitado(
+        eventoId, invitadoId, organizadorId, datos
+    );
+    if (filas === 0) throw crearError(404, 'Confirmación no encontrada');
+    return confirmationRepository.getByInvitado(eventoId, invitadoId, organizadorId);
+};
+
+const removeByInvitado = async (eventoIdCrudo, invitadoIdCrudo, organizadorId) => {
+    const eventoId = validarId(eventoIdCrudo, 'eventoId');
+    const invitadoId = validarId(invitadoIdCrudo, 'invitadoId');
+    const filas = await confirmationRepository.removeByInvitado(
+        eventoId, invitadoId, organizadorId
+    );
+    if (filas === 0) throw crearError(404, 'Confirmación no encontrada');
+};
 
 module.exports = {
     getByCodigo,
-    updateByCodigo
+    updateByCodigo,
+    updateByInvitado,
+    removeByInvitado
 };

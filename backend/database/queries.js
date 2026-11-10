@@ -42,5 +42,6 @@ module.exports = {
     JOIN Invitados i ON i.id = c.invitado_id
     JOIN Eventos e ON e.id = i.evento_id
     WHERE i.id = @invitadoId AND i.evento_id = @eventoId
-      AND e.organizador_id = @organizadorId`
+      AND e.organizador_id = @organizadorId`,
+  
 };

@@ -5,6 +5,13 @@ const router = express.Router();
 
 router.get('/invitados/:codigo/confirmacion', confirmationController.getByCodigo);
 router.put('/invitados/:codigo/confirmacion', confirmationController.updateByCodigo);
-
+router.put(
+    '/eventos/:eventoId/invitados/:invitadoId/confirmacion',
+    confirmationController.updateByInvitado
+);
+router.delete(
+    '/eventos/:eventoId/invitados/:invitadoId/confirmacion',
+    confirmationController.removeByInvitado
+);
 
 module.exports = router;
