@@ -1,6 +1,6 @@
 const express = require('express');
 const eventRouter = require(`./routers/eventRouter`)
-const confirmationRouter = require('./Routers/confirmationRouter');
+const confirmationRouter = require('./routers/confirmationRouter');
 const { PORT, HOSTNAME } = require('./database/config');
 const app = express();
 
