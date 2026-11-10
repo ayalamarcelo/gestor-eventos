@@ -108,7 +108,6 @@ cp .env.example .env
 | `DB_PORT` | Puerto de SQL Server (por defecto `1433`) |
 | `DB_NAME` | Nombre de la base (ej. `TheGathering`) |
 | `DB_USER` / `DB_PASSWORD` | Credenciales de SQL Server |
-| `JWT_SECRET` | Secreto para firmar los tokens JWT |
 
 
 Iniciar el servidor:
