@@ -1,10 +1,13 @@
 const express = require('express');
 const eventRouter = require(`./routers/eventRouter`)
+const invitacionRouter = require('./routers/invitacionRouter')
 const { PORT, HOSTNAME } = require('./database/config');
 const app = express();
 
 app.use(express.json());
+
 app.use('/api', eventRouter);
+app.use('/api/invitaciones', invitacionRouter)
 
 app.get('/', (req, res) => {
    res.status(200).send('OK');
