@@ -3,6 +3,6 @@ const confirmacionController = require('./confirmacion.controller');
 
 const router = express.Router();
 
-router.get('/eventos/:eventoId/confirmaciones', confirmacionController.obtenerReporte(req, res));
+router.get('/eventos/:eventoId/confirmaciones', confirmacionController.obtenerReporte);
 
 module.exports = router;
