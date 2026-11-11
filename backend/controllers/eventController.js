@@ -99,4 +99,14 @@ const updateEventById = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 }
-module.exports = { getAll, getEventById, deleteEventById, updateEventById };
+
+const createEvent = async (req, res) => {
+  try {
+    const evento = await eventService.createEvent(req.body);
+    res.status(201).json(evento);
+  } catch (error) {
+    res.status(error.status || 500).json({ error: error.message });
+  }
+};
+
+module.exports = { getAll, getEventById, deleteEventById, updateEventById, createEvent };
