@@ -70,5 +70,10 @@ module.exports = {
   getEventos: queryBaseSelect,
   getEventById: `${queryBaseSelect} WHERE id = @id `,
   deleteEventById: `DELETE FROM Eventos WHERE id = @id `,
-  updateEventById: (campos) => `UPDATE Eventos SET ${campos.join(', ')} WHERE id = @id`
+  updateEventById: (campos) => `UPDATE Eventos SET ${campos.join(', ')} WHERE id = @id`,
+  createEvent: `INSERT INTO Eventos (titulo, descripcion, fecha_hora, direccion, organizador_id)
+               OUTPUT INSERTED.id, INSERTED.titulo, INSERTED.descripcion,
+                      INSERTED.fecha_hora, INSERTED.direccion,
+                      INSERTED.creado_en, INSERTED.organizador_id
+               VALUES (@titulo, @descripcion, @fecha_hora, @direccion, @organizador_id)`
 };
