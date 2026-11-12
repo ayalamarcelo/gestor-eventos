@@ -1,12 +1,4 @@
-const queryBaseSelect = `SELECT id, 
-titulo,
-descripcion, 
-fecha_hora, 
-direccion, 
-codigo,
-creado_en, 
-organizador_id
-FROM Eventos`;
+const queryBaseSelect = `SELECT * FROM Eventos`;
 
 
 module.exports = {

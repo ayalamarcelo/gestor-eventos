@@ -1,6 +1,7 @@
 const {getSQLConnection} = require(`../database/connection`)
 const sql = require('mssql')
 const queries = require(`../database/queries`)
+const {organizadorId} = require(`../database/config`)
 
 const getAll = async () => {
     try{
