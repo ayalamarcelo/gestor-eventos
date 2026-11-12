@@ -2,8 +2,7 @@ const queryBaseSelect = `SELECT id,
 titulo,
 descripcion, 
 fecha_hora, 
-direccion, 
-codigo,
+direccion,
 creado_en, 
 organizador_id
 FROM Eventos`;
@@ -67,6 +66,15 @@ module.exports = {
               INNER JOIN Eventos e ON e.id = i.evento_id
               LEFT JOIN Confirmaciones c ON c.invitado_id = i.id
               WHERE i.codigo = @codigo`,
+  postInsertarConfirmacion: `
+              INSERT INTO Confirmaciones
+                  (invitado_id, asiste, cantidad_acompanantes, restriccion, detalle_restriccion)
+              OUTPUT INSERTED.id, INSERTED.invitado_id, INSERTED.asiste,
+                     INSERTED.cantidad_acompanantes, INSERTED.restriccion,
+                     INSERTED.detalle_restriccion, INSERTED.creado_en
+              VALUES
+                  (@invitado_id, @asiste, @acompanantes, @restriccion, @detalle)
+  `,
   getEventos: queryBaseSelect,
   getEventById: `${queryBaseSelect} WHERE id = @id `,
   deleteEventById: `DELETE FROM Eventos WHERE id = @id `,
