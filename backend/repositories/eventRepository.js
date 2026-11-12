@@ -68,4 +68,21 @@ const updateEventById = async (id, evento) => {
         throw new Error('Error en eventRepository.updateEventById: ' + error.message);
     }
 };
-module.exports = { getAll, getEventById, deleteEventById, updateEventById };
+
+    const createEvent = async ({ titulo, descripcion, fecha_hora, direccion }) => {
+        try {
+            const pool = await getSQLConnection();
+            const resultado = await pool.request()
+                .input('titulo', sql.NVarChar(120), titulo)
+                .input('descripcion', sql.NVarChar(500), descripcion)
+                .input('fecha_hora', sql.DateTime2, fecha_hora)
+                .input('direccion', sql.NVarChar(200), direccion)
+                .input('organizador_id', sql.Int, organizadorId)
+                .query(queries.createEvent);
+            return resultado.recordset[0];
+        } catch (error) {
+            throw new Error('Error en eventRepository.createEvent: ' + error.message);
+        }
+    };
+
+module.exports = { getAll, getEventById, deleteEventById, updateEventById, createEvent };
