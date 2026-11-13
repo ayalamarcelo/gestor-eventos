@@ -15,6 +15,4 @@ router.delete(
     confirmationController.removeByInvitado
 );
 
-router.get('/eventos/:eventoId/confirmaciones', confirmationController.obtenerReporte);
-
 module.exports = router;
