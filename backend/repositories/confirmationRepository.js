@@ -14,7 +14,12 @@ const buscarConfirmaciones = async (eventoId, restriccion) => {
   const pool = await getSQLConnection();
   const request = pool.request().input('eventoId', sql.Int, eventoId);
 
-  let consulta = 'SELECT * FROM Confirmaciones WHERE eventoId = @eventoId';
+  let consulta = `
+    SELECT c.* 
+    FROM Confirmaciones c
+    INNER JOIN Invitados i ON i.id = c.invitado_id
+    WHERE i.evento_id = @eventoId
+  `;
 
   if (restriccion) {
     consulta += ' AND restriccion = @restriccion';
