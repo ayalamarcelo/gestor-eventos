@@ -1,0 +1,18 @@
+<app-evento-form (creado)="cargar()" />
+
+@if (loading()) {
+  <p>Cargando eventos...</p>
+} @else if (error()) {
+  <p class="error">{{ error() }}</p>
+} @else if (events().length === 0) {
+  <p>Todavía no hay eventos.</p>
+} @else {
+  <ul>
+    @for (event of events(); track event.id) {
+      <li>
+        <strong>{{ event.titulo }}</strong> —
+        {{ event.fecha_hora | date: 'dd/MM/yyyy HH:mm' }} — {{ event.direccion }}
+      </li>
+    }
+  </ul>
+}
