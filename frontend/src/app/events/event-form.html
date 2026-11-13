@@ -1,0 +1,34 @@
+<form [formGroup]="form" (ngSubmit)="send()">
+  <label>Título
+    <input formControlName="titulo" />
+  </label>
+  @if (form.controls.titulo.touched && form.controls.titulo.invalid) {
+    <small class="error">El título es obligatorio (máximo 120 caracteres)</small>
+  }
+
+  <label>Descripción
+    <textarea formControlName="descripcion"></textarea>
+  </label>
+
+  <label>Fecha y hora
+    <input type="datetime-local" formControlName="fecha_hora" />
+  </label>
+  @if (form.controls.fecha_hora.touched && form.controls.fecha_hora.invalid) {
+    <small class="error">La fecha y hora es obligatoria</small>
+  }
+
+  <label>Dirección
+    <input formControlName="direccion" />
+  </label>
+  @if (form.controls.direccion.touched && form.controls.direccion.invalid) {
+    <small class="error">La dirección es obligatoria (máximo 200 caracteres)</small>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  <button type="submit" [disabled]="sending()">
+    {{ sending() ? 'Creando...' : 'Crear evento' }}
+  </button>
+</form>
