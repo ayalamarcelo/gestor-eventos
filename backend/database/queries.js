@@ -7,7 +7,6 @@ creado_en,
 organizador_id
 FROM Eventos`;
 
-
 module.exports = {
   buscarInvitado: `SELECT id FROM Invitados WHERE codigo = @codigo`,
   getConfirmacionPorCodigo: `

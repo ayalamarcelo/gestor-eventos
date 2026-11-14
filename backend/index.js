@@ -1,7 +1,7 @@
 const express = require('express');
-const eventRouter = require(`./routers/eventRouter`)
-const confirmationRouter = require('./routers/confirmationRouter');
+const eventRouter = require(`./routers/eventRouter`);
 const invitacionRouter = require('./routers/invitacionRouter')
+const confirmationRouter = require('./routers/confirmationRouter');
 const { PORT, HOSTNAME } = require('./database/config');
 const app = express();
 
