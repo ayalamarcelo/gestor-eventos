@@ -1,0 +1,163 @@
+@if (cargando) {
+  <div class="loading-container">
+    <p>Cargando panel del organizador...</p>
+  </div>
+} @else {
+
+  <div class="panel-container">
+    
+    <!-- ENCABEZADO SUPERIOR DEL EVENTO -->
+    <header class="evento-header">
+      <div class="evento-info">
+        <span class="badge-casamiento">CASAMIENTO</span>
+        <h1>{{ datosPanel?.tituloEvento || '' }}</h1>
+        <p class="fecha-ubicacion"> {{ datosPanel?.fecha }} · {{ datosPanel?.ubicacion }}</p>
+      </div>
+      <div class="evento-acciones">
+        <button class="btn-outline">Ver invitación</button>
+        <button class="btn-primary">Organizador (ID: {{ datosPanel?.organizadorId }})</button>
+      </div>
+    </header>
+
+    <!-- TARJETAS DE MÉTRICAS SUPERIORES -->
+    <div class="tarjetas-grid">
+      <div class="card card-dark">
+        <div class="card-header-icon">
+          <span>Personas confirmadas</span>
+          <i class="icon-users"></i>
+        </div>
+        <h2>{{ datosPanel?.totalConfirmados || 10 }}</h2>
+        <p>asistentes totales</p>
+        <small>{{ datosPanel?.invitacionesConfirmadas || 6 }} invitaciones confirmadas</small>
+      </div>
+
+      <div class="card">
+        <div class="card-header-icon">
+          <span>No asisten</span>
+          <i class="icon-cancel"></i>
+        </div>
+        <h2>{{ datosPanel?.totalNoAsisten || 1 }}</h2>
+        <p>invitación cancelada</p>
+        <small class="text-muted">{{ datosPanel?.ultimoCancelado || 'Federico Gómez' }}</small>
+      </div>
+
+      <div class="card">
+        <div class="card-header-icon">
+          <span>Pendientes</span>
+          <i class="icon-clock"></i>
+        </div>
+        <h2>{{ datosPanel?.totalPendientes || 3 }}</h2>
+        <p>sin respuesta</p>
+        <small>{{ datosPanel?.porcentajeRespuesta || '70%' }} de respuesta global</small>
+      </div>
+
+      <div class="card">
+        <div class="card-header-icon">
+          <span>Con restricciones</span>
+          <i class="icon-utensils"></i>
+        </div>
+        <h2>{{ datosPanel?.totalRestricciones || 4 }}</h2>
+        <p>menús especiales</p>
+        <small>Requieren aviso al catering</small>
+      </div>
+    </div>
+
+    <!-- SECCIÓN INFERIOR: DOS COLUMNAS -->
+    <div class="contenido-grid">
+      
+      <!-- COLUMNA IZQUIERDA: RESTRICCIONES ALIMENTARIAS -->
+      <div class="restricciones-sidebar">
+        <h3>Detalle de menús</h3>
+        <h4>Restricciones alimentarias</h4>
+        <p class="subtitle-desc">Información directa para el servicio de cocina.</p>
+
+        <div class="lista-restricciones">
+          @for (item of datosPanel?.restriccionesDetalle; track item.tipo) {
+            <div class="restriccion-card">
+              <div class="restriccion-info">
+                <strong>{{ item.tipo }}</strong>
+                <span>{{ item.detalle }}</span>
+              </div>
+              <span class="badge-numero">{{ item.cantidad }}</span>
+            </div>
+          } @empty {
+            <p>No hay restricciones registradas.</p>
+          }
+        </div>
+      </div>
+
+      <!-- COLUMNA DERECHA: TABLA DE INVITADOS CON PESTAÑAS -->
+      <div class="tabla-main-container">
+        <div class="tabla-header-flex">
+          <div>
+            <h3>Invitados confirmados</h3>
+            <p>Monitoreo de asistencia en tiempo real</p>
+          </div>
+          
+          <!-- PESTAÑAS DE FILTRO -->
+          <div class="tabs-filtros">
+            <button [class.active]="filtroEstadoActual === 'todos'" (click)="filtrarPorEstado('todos')">Todos ({{ datosPanel?.invitados?.length || 0 }})</button>
+            <button [class.active]="filtroEstadoActual === 'asiste'" (click)="filtrarPorEstado('asiste')">Asisten</button>
+            <button [class.active]="filtroEstadoActual === 'pendiente'" (click)="filtrarPorEstado('pendiente')">Pendientes</button>
+            <button [class.active]="filtroEstadoActual === 'no asiste'" (click)="filtrarPorEstado('no asiste')">No asisten</button>
+          </div>
+        </div>
+
+        <!-- BUSCADOR -->
+        <input 
+          type="text" 
+          class="input-buscador"
+          [(ngModel)]="textoFiltro" 
+          (input)="filtrarInvitados()" 
+          placeholder="Filtrar invitado por nombre..."
+        />
+
+        <!-- TABLA -->
+        <table class="tabla-invitados">
+          <thead>
+            <tr>
+              <th>INVITADO / CONTACTO</th>
+              <th>ACOMPAÑANTES</th>
+              <th>RESTRICCIÓN</th>
+              <th>ESTADO</th>
+              <th>LINK PERSONAL</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (invitado of invitadosFiltrados; track invitado.id) {
+              <tr>
+                <td>
+                  <div class="contacto-celda">
+                    <span class="avatar-iniciales">{{ invitado.iniciales }}</span>
+                    <span>{{ invitado.nombre }}</span>
+                  </div>
+                </td>
+                <td>{{ invitado.acompanantes }}</td>
+                <td><span class="badge-tag">{{ invitado.restriccion || 'Estándar' }}</span></td>
+                <td>
+                  <span class="estado-badge" [ngClass]="invitado.estado.toLowerCase()">
+                    {{ invitado.estado }}
+                  </span>
+                </td>
+                <td><a href="#" class="link-accion">{{ invitado.linkAccion || 'Ver tarjeta' }}</a></td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="5" class="text-center">No se encontraron invitados con ese filtro.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <!-- ALERTA SI NO HAY CONFIRMACIONES -->
+    @if (datosPanel?.totalConfirmados === 0) {
+      <div class="alert-warning">
+        Atención: El evento aún no cuenta con confirmaciones registradas.
+      </div>
+    }
+
+  </div>
+}

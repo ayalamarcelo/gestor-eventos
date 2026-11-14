@@ -1,0 +1,164 @@
+:host {
+  display: block;
+  background-color: #fcfbf9;
+  color: #2c2a29;
+  font-family: system-ui, -apple-system, sans-serif;
+  padding: 2rem;
+  min-height: 100dvh;
+}
+
+.panel-container {
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.evento-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e6e4df;
+  padding-bottom: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.badge-casamiento {
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  color: #8c7355;
+  font-weight: bold;
+}
+
+.evento-header h1 {
+  font-size: 2rem;
+  margin: 0.25rem 0;
+  font-family: serif;
+}
+
+.fecha-ubicacion {
+  color: #6c6763;
+  font-size: 0.9rem;
+}
+
+.tarjetas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid #e8e5df;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.card-dark {
+  background: #1b2e23;
+  color: #ffffff;
+  border: none;
+}
+
+.card-dark small {
+  color: #a3b8ad;
+}
+
+.card h2 {
+  font-size: 2.2rem;
+  margin: 0.5rem 0;
+}
+
+.contenido-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 2rem;
+}
+
+.restricciones-sidebar {
+  background: #ffffff;
+  border: 1px solid #e8e5df;
+  border-radius: 12px;
+  padding: 1.5rem;
+  height: fit-content;
+}
+
+.tabla-main-container {
+  background: #ffffff;
+  border: 1px solid #e8e5df;
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.tabla-invitados {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.tabla-invitados th {
+  text-align: left;
+  font-size: 0.75rem;
+  color: #8c857b;
+  border-bottom: 1px solid #e8e5df;
+  padding-bottom: 0.75rem;
+}
+
+.tabla-invitados td {
+  padding: 1rem 0.5rem;
+  border-bottom: 1px solid #f4f2ec;
+  font-size: 0.9rem;
+}
+
+.contacto-celda {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.avatar-iniciales {
+  width: 32px;
+  height: 32px;
+  background: #f0ece1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.input-buscador {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #e8e5df;
+  border-radius: 8px;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.tabs-filtros {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tabs-filtros button {
+  background: none;
+  border: 1px solid #e8e5df;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.tabs-filtros button.active {
+  background: #2c2a29;
+  color: #ffffff;
+  border-color: #2c2a29;
+}
+
+.evento-acciones, .btn-primary, .btn-outline {
+  display: flex;
+  gap: 20px;
+  padding: 8px 35px;
+}
