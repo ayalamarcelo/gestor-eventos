@@ -18,7 +18,6 @@ CREATE TABLE Eventos (
     descripcion NVARCHAR(500) NULL,
     fecha_hora DATETIME2 NOT NULL,
     direccion NVARCHAR(200) NOT NULL,
-    codigo VARCHAR(12) NOT NULL UNIQUE,
     creado_en DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
     organizador_id INT NOT NULL,
     CONSTRAINT FK_Eventos_Usuarios FOREIGN KEY (organizador_id)
@@ -64,14 +63,13 @@ SET IDENTITY_INSERT Usuarios OFF;
 GO
 
 SET IDENTITY_INSERT Eventos ON;
-INSERT INTO Eventos (id, titulo, descripcion, fecha_hora, direccion, codigo, organizador_id)
+INSERT INTO Eventos (id, titulo, descripcion, fecha_hora, direccion, organizador_id)
 VALUES (
     1,
     'Cena de Fin de Cursada',
     'Festejo del grupo después de defender el MVP',
     '2026-11-20T21:00:00',
     'Av. Rivadavia 1234, Buenos Aires',
-    'GATHER2026',
     1
 );
 SET IDENTITY_INSERT Eventos OFF;

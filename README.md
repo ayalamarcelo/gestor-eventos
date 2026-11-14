@@ -35,7 +35,6 @@ Recuperación de contraseña, roles de usuario, plantillas visuales, galería de
 | Frontend | Angular 22 |
 | Backend | Node.js + Express 5 |
 | Base de datos | SQL Server |
-| Autenticación | JWT + bcrypt |
 
 ## Estructura del repositorio
 

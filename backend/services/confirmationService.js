@@ -108,9 +108,27 @@ const removeByInvitado = async (eventoIdCrudo, invitadoIdCrudo, organizadorId) =
     if (filas === 0) throw crearError(404, 'Confirmación no encontrada');
 };
 
+const obtenerReporteConfirmaciones = async (eventoId, restriccion) => {
+    const evento = await confirmationRepository.buscarEventoPorId(eventoId);
+    if (!evento) {
+        const error = new Error('El evento especificado no existe');
+        error.statusCode = 404;
+        throw error;
+    }
+
+    const confirmaciones = await confirmationRepository.buscarConfirmaciones(eventoId, restriccion);
+
+    return {
+        evento,
+        confirmaciones,
+        total: confirmaciones.length
+    };
+};
+
 module.exports = {
     getByCodigo,
     updateByCodigo,
     updateByInvitado,
-    removeByInvitado
+    removeByInvitado,
+    obtenerReporteConfirmaciones
 };

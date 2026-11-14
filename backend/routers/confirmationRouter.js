@@ -3,6 +3,7 @@ const confirmationController = require('../controllers/confirmationController');
 
 const router = express.Router();
 
+router.get('/eventos/:eventoId/confirmaciones', confirmationController.obtenerReporte);
 router.get('/invitados/:codigo/confirmacion', confirmationController.getByCodigo);
 router.put('/invitados/:codigo/confirmacion', confirmationController.updateByCodigo);
 router.put(
