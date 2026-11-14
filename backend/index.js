@@ -4,7 +4,9 @@ const confirmationRouter = require('./routers/confirmationRouter');
 const invitacionRouter = require('./routers/invitacionRouter')
 const { PORT, HOSTNAME } = require('./database/config');
 const app = express();
+const cors = require('cors');
 
+app.use(cors({origin: 'http://127.0.0.1:4200'}));
 app.use(express.json());
 
 app.use('/api', eventRouter);
