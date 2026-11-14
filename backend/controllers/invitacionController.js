@@ -1,5 +1,13 @@
 const invitacionService = require('../services/invitacionService')
 
+const responderError = (res, error) => {
+    if (error.status) {
+        return res.status(error.status).json({ error: error.message })
+    }
+    console.error(error)
+    return res.status(500).json({ error: 'Error interno del servidor' })
+}
+
 const obtenerInvitacionPorCodigo = async (req, res) => {
     try {
         const codigo = (req.params.codigo || '').trim() 
@@ -12,8 +20,20 @@ const obtenerInvitacionPorCodigo = async (req, res) => {
         return res.status(200).json(invitacion)
 
     } catch (error) {
-        res.status(500).json({ error: 'Error interno del servidor' })
+         responderError(res, error)
     }
 }
 
-module.exports = { obtenerInvitacionPorCodigo }
+const confirmarAsistencia = async (req, res) => {
+    try {
+        const codigo = (req.params.codigo || '').trim()
+        const confirmacion = await invitacionService.confirmarAsistencia(codigo, req.body)
+
+        return res.status(201).json(confirmacion)
+
+    } catch (error) {
+         responderError(res, error)
+    }
+}
+
+module.exports = { obtenerInvitacionPorCodigo, confirmarAsistencia }
