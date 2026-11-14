@@ -82,5 +82,21 @@ module.exports = {
                OUTPUT INSERTED.id, INSERTED.titulo, INSERTED.descripcion,
                       INSERTED.fecha_hora, INSERTED.direccion,
                       INSERTED.creado_en, INSERTED.organizador_id
-               VALUES (@titulo, @descripcion, @fecha_hora, @direccion, @organizador_id)`
+               VALUES (@titulo, @descripcion, @fecha_hora, @direccion, @organizador_id)`,
+  eventoDelOrganizador: `
+    SELECT id FROM Eventos
+    WHERE id = @eventoId AND organizador_id = @organizadorId`,
+  insertarInvitado: `
+    INSERT INTO Invitados (evento_id, nombre, codigo)
+    OUTPUT INSERTED.id, INSERTED.evento_id, INSERTED.nombre,
+           INSERTED.codigo, INSERTED.creado_en
+    VALUES (@eventoId, @nombre, @codigo)`,
+  getInvitadosDeEvento: `
+    SELECT i.id, i.nombre, i.codigo, i.creado_en,
+           CASE WHEN c.id IS NULL THEN CAST(0 AS BIT) ELSE CAST(1 AS BIT) END AS ya_confirmo,
+           c.asiste, c.cantidad_acompanantes, c.restriccion
+    FROM Invitados i
+    LEFT JOIN Confirmaciones c ON c.invitado_id = i.id
+    WHERE i.evento_id = @eventoId
+    ORDER BY i.id`,
 };
