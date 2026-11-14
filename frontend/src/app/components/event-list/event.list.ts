@@ -1,8 +1,8 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { eventService } from './event.service';
-import { event } from './event.model';
-import { eventForm } from './event-form';
+import { eventService } from '../../services/event.service';
+import { event } from '../../models/event.model';
+import { eventForm } from './../event-form/event-form';
 
 @Component({
   selector: 'app-eventos-lista',
@@ -20,7 +20,7 @@ export class eventList implements OnInit {
     this.loading();
   }
 
-  cargar() {
+  load() {
     this.loading.set(true);
     this.error.set(null);
     this.eventService.getAll().subscribe({
