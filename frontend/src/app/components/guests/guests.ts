@@ -70,6 +70,19 @@ export class Invitados implements OnInit {
     });
   }
 
+    eliminarInvitado(invitado: Invitado): void {
+    const confirmar = confirm(`¿Eliminar la invitación de "${invitado.nombre}"? Si ya confirmó, también se borra su respuesta.`);
+    if (!confirmar) return;
+
+    this._invitadoService.eliminarInvitado(this.eventoId, invitado.id).subscribe({
+      next: () => {
+        this.error.set(null);
+        this.invitados.update(lista => lista.filter(i => i.id !== invitado.id));
+      },
+      error: err => this.error.set(err.error?.error ?? 'No se pudo eliminar el invitado')
+    });
+  }
+
   link(invitado: Invitado): string {
     return `${window.location.origin}/invitacion/${invitado.codigo}`;
   }

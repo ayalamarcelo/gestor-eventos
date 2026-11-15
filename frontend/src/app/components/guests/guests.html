@@ -1,95 +1,78 @@
 <div class="d-flex justify-content-between align-items-start mb-4">
-  <div>
-    <h2>Invitados: enlaces personales, QR y WhatsApp</h2>
-    <p class="text-muted">
-      Lista de invitados del evento. Para cada uno: su link personal, código QR,
-      botón de WhatsApp y botón de copiar link.
-    </p>
-  </div>
-  <button type="button" class="btn btn-dark" (click)="mostrarFormulario.set(!mostrarFormulario())">
-    Nuevo invitado
-  </button>
+    <div>
+        <h2>Invitados: enlaces personales, QR y WhatsApp</h2>
+        <p class="text-muted">
+            Lista de invitados del evento. Para cada uno: su link personal, código QR,
+            botón de WhatsApp y botón de copiar link.
+        </p>
+    </div>
+    <button type="button" class="btn btn-dark" (click)="mostrarFormulario.set(!mostrarFormulario())">
+        Nuevo invitado
+    </button>
 </div>
 
 @if (mostrarFormulario()) {
-  <form class="card card-body mb-4" [formGroup]="formulario" (ngSubmit)="agregarInvitado()">
+<form class="card card-body mb-4" [formGroup]="formulario" (ngSubmit)="agregarInvitado()">
     <label for="nombre" class="form-label">Nombre del invitado</label>
     <div class="input-group">
-      <input id="nombre" type="text" class="form-control" formControlName="nombre" autocomplete="off">
-      <button type="submit" class="btn btn-primary" [disabled]="formulario.invalid">Agregar</button>
+        <input id="nombre" type="text" class="form-control" formControlName="nombre" autocomplete="off">
+        <button type="submit" class="btn btn-primary" [disabled]="formulario.invalid">Agregar</button>
     </div>
     @if (formulario.controls.nombre.touched && formulario.controls.nombre.hasError('required')) {
-      <div class="text-danger">El nombre es obligatorio</div>
+    <div class="text-danger">El nombre es obligatorio</div>
     }
-  </form>
+</form>
 }
 
 @if (error()) {
-  <div class="alert alert-danger">{{ error() }}</div>
+<div class="alert alert-danger">{{ error() }}</div>
 }
 
 @if (cargando()) {
-  <p>Cargando invitados...</p>
+<p>Cargando invitados...</p>
 } @else if (invitados().length === 0) {
-  <div class="alert alert-warning">Todavía no hay invitados. Agregá el primero con "Nuevo invitado".</div>
+<div class="alert alert-warning">Todavía no hay invitados. Agregá el primero con "Nuevo invitado".</div>
 } @else {
-  <div class="row row-cols-1 row-cols-md-3 g-4">
+<div class="row row-cols-1 row-cols-md-3 g-4">
     @for (invitado of invitados(); track invitado.id) {
-      <div class="col">
+    <div class="col">
         <div class="card h-100">
-          <div class="card-body">
+            <div class="card-body">
 
-            <div class="d-flex justify-content-between align-items-start mb-3">
-              <div class="d-flex align-items-center gap-2">
-                <span class="rounded-circle bg-secondary-subtle d-inline-flex justify-content-center align-items-center fw-bold"
-                  style="width: 44px; height: 44px;">{{ iniciales(invitado.nombre) }}</span>
-                <div>
-                  <h5 class="mb-0">{{ invitado.nombre }}</h5>
-                  <small class="text-muted">
-                    @if (!invitado.ya_confirmo) {
-                      Sin responder
-                    } @else if (invitado.asiste && invitado.cantidad_acompanantes) {
-                      +{{ invitado.cantidad_acompanantes }} acompañantes
-                    } @else if (invitado.asiste) {
-                      Individual
-                    } @else {
-                      No asiste
-                    }
-                  </small>
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <span
+                        class="rounded-circle bg-secondary-subtle d-inline-flex justify-content-center align-items-center fw-bold"
+                        style="width: 44px; height: 44px;">{{ iniciales(invitado.nombre) }}</span>
+                    <h5 class="mb-0">{{ invitado.nombre }}</h5>
                 </div>
-              </div>
 
-              @if (!invitado.ya_confirmo) {
-                <span class="badge text-bg-warning">Pendiente</span>
-              } @else if (invitado.asiste) {
-                <span class="badge text-bg-success">Confirmado</span>
-              } @else {
-                <span class="badge text-bg-danger">No asiste</span>
-              }
+                <div class="text-center border rounded p-3 mb-3">
+                    @if (qrs()[invitado.codigo]) {
+                    <img [src]="qrs()[invitado.codigo]" [alt]="'QR de ' + invitado.nombre" width="140" height="140">
+                    }
+                    <div class="small text-muted mt-2">Código: {{ invitado.codigo }}</div>
+                </div>
+
+                <label class="form-label small text-muted">LINK PERSONAL</label>
+                <input type="text" class="form-control mb-3" readonly [value]="link(invitado)">
+
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-outline-secondary flex-fill" (click)="copiarLink(invitado)">
+                        @if (copiado() === invitado.codigo) { ¡Copiado! } @else { Copiar link }
+                    </button>
+                    <a class="btn btn-success flex-fill" [href]="whatsapp(invitado)" target="_blank"
+                        rel="noopener">WhatsApp</a>
+                </div>
+
+                <button type="button" class="btn btn-outline-danger w-100 mt-2" (click)="eliminarInvitado(invitado)">
+                    Eliminar invitación
+                </button>
+
             </div>
-
-            <div class="text-center border rounded p-3 mb-3">
-              @if (qrs()[invitado.codigo]) {
-                <img [src]="qrs()[invitado.codigo]" [alt]="'QR de ' + invitado.nombre" width="140" height="140">
-              }
-              <div class="small text-muted mt-2">Código: {{ invitado.codigo }}</div>
-            </div>
-
-            <label class="form-label small text-muted">LINK PERSONAL</label>
-            <input type="text" class="form-control mb-3" readonly [value]="link(invitado)">
-
-            <div class="d-flex gap-2">
-              <button type="button" class="btn btn-outline-secondary flex-fill" (click)="copiarLink(invitado)">
-                @if (copiado() === invitado.codigo) { ¡Copiado! } @else { Copiar link }
-              </button>
-              <a class="btn btn-success flex-fill" [href]="whatsapp(invitado)" target="_blank" rel="noopener">WhatsApp</a>
-            </div>
-
-          </div>
         </div>
-      </div>
+    </div>
     }
-  </div>
+</div>
 }
 
 <a class="btn btn-link mt-4" routerLink="/events">← Volver a eventos</a>
