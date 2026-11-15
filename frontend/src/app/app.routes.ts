@@ -7,6 +7,7 @@ import { PanelOrganizador } from './components/panel-organizador/panel-organizad
 
 
 export const routes: Routes = [
+<<<<<<< HEAD
     {
         path: '',
         redirectTo: 'eventos',
@@ -37,4 +38,12 @@ export const routes: Routes = [
         component: Invitados,
         data: { volver: { ruta: '/eventos/:id/asistencias', texto: 'Volver' } }
     },
+=======
+    { path: 'events', component: eventList },
+    {
+        path: 'invitacion/:codigo',
+        loadComponent: () => import('./components/invitation-card/invitation-card').then(m => m.InvitationCard)
+    },
+    { path: '', redirectTo: 'events', pathMatch: 'full' }
+>>>>>>> 773e0d6 (feat: agregar componente invitation-card y su ruta con el código en la URL)
 ];
