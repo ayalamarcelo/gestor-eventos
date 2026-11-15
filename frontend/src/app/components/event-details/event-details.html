@@ -1,8 +1,62 @@
-@if (error()) {
-<p class="text-danger">{{ error() }}</p>
-} @else if (evento()) {
-<h1>{{ evento()?.titulo }}</h1>
-<p>{{ evento()?.direccion }}</p>
-} @else {
-<p>Cargando evento...</p>
-}
+<div class="detalle">
+    @if (error()) {
+    <div class="aviso aviso-error">{{ error() }}</div>
+    } @else if (evento()) {
+    <header class="encabezado">
+        <div>
+            <span class="etiqueta">Detalle del evento</span>
+            <h1 class="titulo">{{ evento()?.titulo }}</h1>
+            <p class="subtitulo">Modificá los datos del evento o eliminalo si es necesario.</p>
+        </div>
+        <button type="button" class="btn-borrar">Borrar evento</button>
+    </header>
+
+    <section class="tarjeta">
+        <h2 class="tarjeta-titulo">Datos del evento</h2>
+        <p class="tarjeta-sub">Los cambios se reflejan al instante en la invitación.</p>
+
+        <form [formGroup]="form">
+            <div class="campo">
+                <label for="titulo">Título del evento</label>
+                <input id="titulo" formControlName="titulo" />
+                @if (form.controls.titulo.touched && form.controls.titulo.invalid) {
+                <small class="error">El título es obligatorio (máximo 120 caracteres)</small>
+                }
+            </div>
+
+            <div class="campo">
+                <label for="descripcion">Mensaje de la invitación</label>
+                <textarea id="descripcion" formControlName="descripcion" rows="3"></textarea>
+                @if (form.controls.descripcion.invalid) {
+                <small class="error">Máximo 500 caracteres</small>
+                }
+            </div>
+
+            <div class="fila">
+                <div class="campo">
+                    <label for="fecha_hora">Fecha y hora</label>
+                    <input id="fecha_hora" type="datetime-local" formControlName="fecha_hora" />
+                    @if (form.controls.fecha_hora.touched && form.controls.fecha_hora.invalid) {
+                    <small class="error">La fecha y hora es obligatoria</small>
+                    }
+                </div>
+
+                <div class="campo">
+                    <label for="direccion">Dirección</label>
+                    <input id="direccion" formControlName="direccion" />
+                    @if (form.controls.direccion.touched && form.controls.direccion.invalid) {
+                    <small class="error">La dirección es obligatoria (máximo 200 caracteres)</small>
+                    }
+                </div>
+            </div>
+
+            <div class="acciones">
+                <button type="button" class="btn-secundario">Cancelar</button>
+                <button type="button" class="btn-principal">Guardar cambios</button>
+            </div>
+        </form>
+    </section>
+    } @else {
+    <p class="cargando">Cargando evento...</p>
+    }
+</div>
