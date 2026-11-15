@@ -1,0 +1,8 @@
+@if (error()) {
+<p class="text-danger">{{ error() }}</p>
+} @else if (evento()) {
+<h1>{{ evento()?.titulo }}</h1>
+<p>{{ evento()?.direccion }}</p>
+} @else {
+<p>Cargando evento...</p>
+}
