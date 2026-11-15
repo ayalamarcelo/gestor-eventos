@@ -1,1 +1,27 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+    --color-fondo: #f7f3ea;
+    --color-tarjeta: #fdfcf7;
+    --color-borde: #e9e2d0;
+    --color-verde: #1f3a2e;
+    --color-dorado: #b08d57;
+    --color-texto: #1c1c1a;
+    --color-texto-suave: #6b6b5e;
+    --color-error: #c0392b;
+    --fuente-titulo: 'Cormorant Garamond', serif;
+    --fuente-texto: 'Inter', sans-serif;
+}
+
+body {
+    background: var(--color-fondo);
+    color: var(--color-texto);
+    font-family: var(--fuente-texto);
+}
+
+h1,
+h2,
+h3 {
+    font-family: var(--fuente-titulo);
+    font-weight: 600;
+}
