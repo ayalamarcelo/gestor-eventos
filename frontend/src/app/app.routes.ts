@@ -3,5 +3,11 @@ import { eventList } from './components/event-list/event.list';
 
 export const routes: Routes = [
     { path: 'events', component: eventList },
+    {
+        path: 'eventos/:id/invitados',
+        loadComponent: () =>
+            import('./components/guests/guests')
+                .then(m => m.Invitados)
+    },
     { path: '', redirectTo: 'events', pathMatch: 'full' }
 ];
