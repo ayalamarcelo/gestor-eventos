@@ -4,7 +4,7 @@ const responderError = (res, error) => {
     res.status(error.status || 500).json({ error: error.message });
 };
 
-const crear = async (req, res) => {
+const crearInvitado = async (req, res) => {
     try {
         const invitado = await guestService.crear(req.params.eventoId, req.body);
         res.status(201).json(invitado);
@@ -13,7 +13,7 @@ const crear = async (req, res) => {
     }
 };
 
-const listar = async (req, res) => {
+const listarInvitado = async (req, res) => {
     try {
         const invitados = await guestService.listar(req.params.eventoId);
         res.status(200).json(invitados);
@@ -22,4 +22,13 @@ const listar = async (req, res) => {
     }
 };
 
-module.exports = { crear, listar };
+const eliminarInvitado = async (req, res) => {
+    try {
+        await guestService.eliminar(req.params.eventoId, req.params.invitadoId);
+        res.status(204).send();
+    } catch (error) {
+        responderError(res, error);
+    }
+};
+
+module.exports = { crearInvitado, listarInvitado, eliminarInvitado };
