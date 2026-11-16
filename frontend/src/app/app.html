@@ -1,0 +1,13 @@
+<header class="nav">
+  <div class="nav-contenido">
+    @if (volverActual(); as valor) {
+    <a class="volver" [routerLink]="valor.ruta">← {{ valor.texto }}</a>
+    }
+    <a class="marca" routerLink="/"><em>The</em> Gathering</a>
+  </div>
+</header>
+
+<div class="container mt-4">
+  <router-outlet />
+</div>
+
