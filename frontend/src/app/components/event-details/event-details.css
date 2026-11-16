@@ -4,14 +4,6 @@
     padding: 8px 0 32px;
 }
 
-.encabezado {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 16px;
-    margin-bottom: 24px;
-}
-
 .etiqueta {
     font-size: 12px;
     letter-spacing: 0.12em;
@@ -89,7 +81,7 @@ textarea:focus {
 
 .acciones {
     display: flex;
-    justify-content: flex-end;
+    justify-content:space-between;
     gap: 12px;
     margin-top: 24px;
     padding-top: 20px;
@@ -117,12 +109,6 @@ textarea:focus {
     border: 1px solid var(--color-borde);
 }
 
-.btn-borrar {
-    background: #fff;
-    color: var(--color-error);
-    border: 1px solid color-mix(in srgb, var(--color-error) 40%, white);
-}
-
 .aviso {
     padding: 14px 18px;
     border-radius: 12px;
@@ -137,13 +123,80 @@ textarea:focus {
 .cargando {
     color: var(--color-texto-suave);
 }
+.fila {
+    display: flex;
+    gap: 16px;
+}
+
+.fila .campo {
+    flex: 1;
+}
 
 @media (max-width: 640px) {
     .fila {
-        grid-template-columns: 1fr;
-    }
-
-    .encabezado {
         flex-direction: column;
     }
+}
+
+.alert {
+    font-size: 14px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+}
+
+.alert-dismissible {
+    padding-right: 44px;
+}
+.alert .btn-close {
+    font-size: 11px;
+}
+.menu {
+    position: relative;
+}
+
+.btn-menu {
+    background: none;
+    cursor: pointer;
+    border: 1px solid #e9e2d000;
+    padding: 0px 10px;
+    font-size: 20px;
+    color: #35352f;
+}
+
+.menu-desplegable {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    margin-top: 6px;
+    min-width: 160px;
+    background: var(--color-tarjeta);
+    border: 1px solid var(--color-borde);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    z-index: 10;
+}
+
+.menu-item-borrar {
+    width: 100%;
+    padding: 10px 14px;
+    text-align: left;
+    background: none;
+    border: none;
+    color: var(--color-error);
+    cursor: pointer;
+}
+
+.menu-item-borrar:hover {
+    background: #fbeceb;
+}
+.encabezado {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+.tarjeta-cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
 }
