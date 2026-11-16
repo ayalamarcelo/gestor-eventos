@@ -1,5 +1,5 @@
-import { Component, signal } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { Component, inject, signal } from '@angular/core';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -9,4 +9,14 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 })
 export class App {
   protected readonly title = signal('The Gathering');
+
+  private readonly _router = inject(Router);
+
+  volverActual() {
+    let ruta = this._router.routerState.snapshot.root;
+    while (ruta.firstChild) {
+      ruta = ruta.firstChild;
+    }
+    return ruta.data['volver'] ?? null;
+  }
 }

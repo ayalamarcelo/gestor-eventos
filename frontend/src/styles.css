@@ -25,3 +25,49 @@ h3 {
     font-family: var(--fuente-titulo);
     font-weight: 600;
 }
+.nav {
+    display: block;
+    background: var(--color-fondo);
+    border-bottom: 1px solid var(--color-borde);
+    padding: 18px 0;
+    text-align: left;
+}
+
+.marca {
+    font-family: var(--fuente-titulo);
+    font-size: 26px;
+    color: var(--color-texto);
+    text-decoration: none;
+}
+
+.marca em {
+    color: var(--color-dorado);
+    font-style: italic;
+    font-weight: 500;
+}
+
+.nav-contenido {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 24px;
+}
+
+.volver {
+    position: absolute;
+    left: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    border: 1px solid var(--color-borde);
+    border-radius: 999px;
+    background: var(--color-tarjeta);
+    color: var(--color-texto);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+}
