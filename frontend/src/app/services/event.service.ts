@@ -15,4 +15,17 @@ export class eventService {
   create(evento: newEvent): Observable<event> {
     return this.http.post<event>(`${API_URL}/eventos`, evento);
   }
+
+  getById(id: number): Observable<event>{
+    return this.http.get<event>(`${API_URL}/eventos/${id}`);
+  }
+
+  update(id: number, datos: Partial<newEvent>): Observable<{ mensaje: string }> {
+    return this.http.put<{ mensaje: string }>(`${API_URL}/eventos/${id}`, datos);
+  }
+
+  delete(id: number): Observable<{ mensaje: string }> {
+    return this.http.delete<{ mensaje: string }>(`${API_URL}/eventos/${id}`);
+  }
+  
 }
