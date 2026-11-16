@@ -6,7 +6,8 @@ import { EventDetails } from './components/event-details/event-details';
 export const routes: Routes = [
     {
         path: 'eventos/:id',
-        component: EventDetails
+        component: EventDetails,
+        data: { volver: { ruta: '/events', texto: 'Mis eventos' } }
     },
     { 
         path: 'events', 
