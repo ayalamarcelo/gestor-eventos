@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { eventList } from './components/event-list/event.list';
-<<<<<<< Updated upstream
 import { EventDetails } from './components/event-details/event-details';
+import { PanelOrganizador } from './components/panel-organizador/panel-organizador';
 
 
 export const routes: Routes = [
@@ -15,16 +15,12 @@ export const routes: Routes = [
         component: eventList
     },
     { 
+        path: 'panel', 
+        component: PanelOrganizador
+    },
+    { 
         path: '', 
         redirectTo: 'events', 
         pathMatch: 'full'
     }
-=======
-import { PanelOrganizador } from './components/panel-organizador/panel-organizador';
-
-export const routes: Routes = [
-    { path: 'events', component: eventList },
-    { path: 'panel', component: PanelOrganizador },
-    { path: '', redirectTo: 'events', pathMatch: 'full' }
->>>>>>> Stashed changes
 ];

@@ -17,13 +17,13 @@ export class PanelOrganizador implements OnInit {
   textoFiltro: string = '';
   filtroEstadoActual: string = 'todos';
   cargando: boolean = true;
+  seccionActual: string = 'modificar';
 
   ngOnInit(): void {
     this.cargarDatos();
   }
 
   cargarDatos() {
-    this.cargando = false;
     this.resumenService.getResumenPanel().subscribe({
       next: (respuesta) => {
         this.datosPanel = respuesta;
@@ -35,6 +35,10 @@ export class PanelOrganizador implements OnInit {
         this.cargando = false;
       }
     });
+  }
+
+  cambiarSeccion(seccion: string) {
+    this.seccionActual = seccion;
   }
 
   filtrarPorEstado(estado: string) {
