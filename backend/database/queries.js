@@ -74,7 +74,23 @@ module.exports = {
               VALUES
                   (@invitado_id, @asiste, @acompanantes, @restriccion, @detalle)
   `,
-  getEventos: queryBaseSelect,
+  getEventos: `SELECT
+      e.id,
+      e.titulo,
+      e.descripcion,
+      e.fecha_hora,
+      e.direccion,
+      e.creado_en,
+      e.organizador_id,
+      COUNT(i.id) AS invitaciones_total,
+      COUNT(CASE WHEN c.asiste = 1 THEN 1 END) AS invitaciones_confirmadas
+    FROM Eventos e
+    LEFT JOIN Invitados i ON i.evento_id = e.id
+    LEFT JOIN Confirmaciones c ON c.invitado_id = i.id
+    GROUP BY
+      e.id, e.titulo, e.descripcion, e.fecha_hora,
+      e.direccion, e.creado_en, e.organizador_id
+    ORDER BY e.fecha_hora DESC`,
   getEventById: `${queryBaseSelect} WHERE id = @id `,
   deleteEventById: `DELETE FROM Eventos WHERE id = @id `,
   updateEventById: (campos) => `UPDATE Eventos SET ${campos.join(', ')} WHERE id = @id`,
