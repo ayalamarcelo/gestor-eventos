@@ -99,4 +99,7 @@ module.exports = {
     LEFT JOIN Confirmaciones c ON c.invitado_id = i.id
     WHERE i.evento_id = @eventoId
     ORDER BY i.id`,
+  eliminarInvitado: `
+    DELETE FROM Invitados
+    WHERE id = @invitadoId AND evento_id = @eventoId`,
 };
