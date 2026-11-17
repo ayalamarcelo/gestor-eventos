@@ -1,4 +1,4 @@
-@if (cargando) {
+@if (cargando()) {
 <main class="loading-container">
   <p>Cargando panel del organizador...</p>
 </main>
@@ -9,8 +9,8 @@
   <header class="evento-header">
     <div class="evento-info">
       <span class="badge-casamiento">CASAMIENTO</span>
-      <h1>{{ datosPanel?.tituloEvento || '' }}</h1>
-      <p class="fecha-ubicacion">{{ datosPanel?.fecha }} · {{ datosPanel?.ubicacion }}</p>
+      <h1>{{ datosPanel()?.tituloEvento || '' }}</h1>
+      <p class="fecha-ubicacion">{{ datosPanel()?.fecha }} · {{ datosPanel()?.ubicacion }}</p>
     </div>
   </header>
 
@@ -31,9 +31,9 @@
         <h2>Personas confirmadas</h2>
         <i class="icon-users" aria-hidden="true"></i>
       </header>
-      <p class="card-number">{{ datosPanel?.totalConfirmados || 0 }}</p>
+      <p class="card-number">{{ datosPanel()?.totalConfirmados || 0 }}</p>
       <p>asistentes totales</p>
-      <small>{{ datosPanel?.invitacionesConfirmadas || 0 }} invitaciones confirmadas</small>
+      <small>{{ datosPanel()?.invitacionesConfirmadas || 0 }} invitaciones confirmadas</small>
     </article>
 
     <article class="card">
@@ -41,9 +41,9 @@
         <h2>No asisten</h2>
         <i class="icon-cancel" aria-hidden="true"></i>
       </header>
-      <p class="card-number">{{ datosPanel?.totalNoAsisten || 0 }}</p>
+      <p class="card-number">{{ datosPanel()?.totalNoAsisten || 0 }}</p>
       <p>invitación cancelada</p>
-      <small class="text-muted">{{ datosPanel?.ultimoCancelado || 'Federico Gómez' }}</small>
+      <small class="text-muted">{{ datosPanel()?.ultimoCancelado || 'Federico Gómez' }}</small>
     </article>
 
     <article class="card">
@@ -51,9 +51,9 @@
         <h2>Pendientes</h2>
         <i class="icon-clock" aria-hidden="true"></i>
       </header>
-      <p class="card-number">{{ datosPanel?.totalPendientes || 0 }}</p>
+      <p class="card-number">{{ datosPanel()?.totalPendientes || 0 }}</p>
       <p>sin respuesta</p>
-      <small>{{ datosPanel?.porcentajeRespuesta || '0%' }} de respuesta global</small>
+      <small>{{ datosPanel()?.porcentajeRespuesta || '0%' }} de respuesta global</small>
     </article>
 
     <article class="card">
@@ -61,7 +61,7 @@
         <h2>Restricciones</h2>
         <i class="icon-utensils" aria-hidden="true"></i>
       </header>
-      <p class="card-number">{{ datosPanel?.totalRestricciones || 4 }}</p>
+      <p class="card-number">{{ datosPanel()?.totalRestricciones || 4 }}</p>
       <p>menús especiales</p>
       <small>Requieren aviso al catering</small>
     </article>
@@ -76,7 +76,7 @@
 
       <nav class="tabs-filtros" aria-label="Filtros de estado">
         <button [class.active]="filtroEstadoActual === 'todos'" (click)="filtrarPorEstado('todos')">Todos ({{
-          datosPanel?.invitados?.length || 0 }})</button>
+          datosPanel()?.invitados?.length || 0 }})</button>
         <button [class.active]="filtroEstadoActual === 'asiste'" (click)="filtrarPorEstado('asiste')">Asisten</button>
         <button [class.active]="filtroEstadoActual === 'pendiente'"
           (click)="filtrarPorEstado('pendiente')">Pendientes</button>
@@ -127,7 +127,7 @@
     </table>
   </section>
 
-  @if (datosPanel?.totalConfirmados === 0) {
+  @if (datosPanel()?.totalConfirmados === 0) {
   <aside class="alert-warning" role="alert">
     Atención: El evento aún no cuenta con confirmaciones registradas.
   </aside>
