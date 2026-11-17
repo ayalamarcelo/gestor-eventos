@@ -6,17 +6,17 @@ import { Invitado } from '../models/guest.model';
 
 @Service()
 export class InvitadoService {
-    private readonly _http = inject(HttpClient);
+    private readonly http = inject(HttpClient);
 
     obtenerInvitados(eventoId: string | number): Observable<Invitado[]> {
-        return this._http.get<Invitado[]>(`${API_URL}/eventos/${eventoId}/invitados`);
+        return this.http.get<Invitado[]>(`${API_URL}/eventos/${eventoId}/invitados`);
     }
 
     crearInvitado(eventoId: string | number, nombre: string): Observable<Invitado> {
-        return this._http.post<Invitado>(`${API_URL}/eventos/${eventoId}/invitados`, { nombre });
+        return this.http.post<Invitado>(`${API_URL}/eventos/${eventoId}/invitados`, { nombre });
     }
 
     eliminarInvitado(eventoId: string | number, invitadoId: number): Observable<void> {
-        return this._http.delete<void>(`${API_URL}/eventos/${eventoId}/invitados/${invitadoId}`);
+        return this.http.delete<void>(`${API_URL}/eventos/${eventoId}/invitados/${invitadoId}`);
     }
 }
