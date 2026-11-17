@@ -1,18 +1,71 @@
-<app-evento-form (created)="load()" />
+<section>
+  <div class="cabecera">
+    <div>
+      <span class="etiqueta">Panel organizador</span>
+      <h1>Hola, <em>Sofía</em></h1>
+      <p class="subtitulo">Gestioná tus eventos y creá nuevas celebraciones para el MVP.</p>
+    </div>
+    <button type="button" class="boton boton-verde" (click)="irAlFormulario()">+ Crear evento</button>
+  </div>
 
-@if (loading()) {
-  <p>Cargando eventos...</p>
-} @else if (error()) {
-  <p class="error">{{ error() }}</p>
-} @else if (events().length === 0) {
-  <p>Todavía no hay eventos.</p>
-} @else {
-  <ul>
-    @for (event of events(); track event.id) {
-      <li>
-        <strong>{{ event.titulo }}</strong> —
-        {{ event.fecha_hora | date: 'dd/MM/yyyy HH:mm' }} — {{ event.direccion }}
-      </li>
-    }
-  </ul>
-}
+  @if (error()) {
+    <div class="banner-error">
+      <span>{{ error() }}</span>
+      <button type="button" class="reintentar" (click)="load()">Reintentar</button>
+    </div>
+  }
+
+  <div class="seccion-titulo">
+    <h2>Mis eventos</h2>
+    <span class="cuenta">
+      {{ events().length === 1 ? '1 evento activo' : events().length + ' eventos activos' }}
+    </span>
+  </div>
+
+  <div class="grid">
+    <div class="lista">
+      @if (loading()) {
+        <p class="vacio">Cargando eventos...</p>
+      } @else if (events().length === 0 && !error()) {
+        <p class="vacio">Todavía no hay eventos.</p>
+      } @else {
+        @for (e of events(); track e.id) {
+          <article class="tarjeta">
+            <div class="cuerpo">
+              @if (esProximo(e)) {
+                <span class="badge">Próximo evento</span>
+              }
+              <h3>{{ e.titulo }}</h3>
+              @if (e.descripcion) {
+                <p class="descripcion">{{ e.descripcion }}</p>
+              }
+
+              <ul class="datos">
+                <li>
+                  <span>📅</span>
+                  <span class="fecha">{{ e.fecha_hora | date: "EEEE, d 'de' MMMM 'de' y · HH:mm 'h'" }}</span>
+                </li>
+                <li><span>📍</span><span>{{ e.direccion }}</span></li>
+                <li>
+                  <span>👥</span>
+                  <span class="confirmadas">
+                    {{ e.invitaciones_confirmadas }} de {{ e.invitaciones_total }} invitaciones confirmadas
+                  </span>
+                </li>
+              </ul>
+
+              <div class="acciones">
+                <button type="button" class="boton boton-verde">▦ Administrar evento</button>
+                <button type="button" class="boton" aria-label="Editar evento">✎</button>
+              </div>
+            </div>
+          </article>
+        }
+      }
+    </div>
+
+    <aside id="form-evento">
+      <app-evento-form (created)="load()" />
+    </aside>
+  </div>
+</section>
