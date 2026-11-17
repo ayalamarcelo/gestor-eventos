@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { toDataURL } from 'qrcode';
 import { InvitadoService } from '../../services/guests.service';
@@ -7,8 +7,9 @@ import { Invitado } from '../../models/guest.model';
 
 @Component({
   selector: 'app-invitados',
-  imports: [ReactiveFormsModule, RouterLink],
-  templateUrl: './guests.html'
+  imports: [ReactiveFormsModule],
+  templateUrl: './guests.html',
+  styleUrl: './guests.css'
 })
 
 export class Invitados implements OnInit {

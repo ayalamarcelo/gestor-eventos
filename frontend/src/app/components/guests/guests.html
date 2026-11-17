@@ -6,7 +6,7 @@
             botón de WhatsApp y botón de copiar link.
         </p>
     </div>
-    <button type="button" class="btn btn-dark" (click)="mostrarFormulario.set(!mostrarFormulario())">
+    <button type="button" class="btn btn-principal" (click)="mostrarFormulario.set(!mostrarFormulario())">
         Nuevo invitado
     </button>
 </div>
@@ -16,7 +16,7 @@
     <label for="nombre" class="form-label">Nombre del invitado</label>
     <div class="input-group">
         <input id="nombre" type="text" class="form-control" formControlName="nombre" autocomplete="off">
-        <button type="submit" class="btn btn-primary" [disabled]="formulario.invalid">Agregar</button>
+        <button type="submit" class="btn btn-principal" [disabled]="formulario.invalid">Agregar</button>
     </div>
     @if (formulario.controls.nombre.touched && formulario.controls.nombre.hasError('required')) {
     <div class="text-danger">El nombre es obligatorio</div>
@@ -57,14 +57,14 @@
                 <input type="text" class="form-control mb-3" readonly [value]="link(invitado)">
 
                 <div class="d-flex gap-2">
-                    <button type="button" class="btn btn-outline-secondary flex-fill" (click)="copiarLink(invitado)">
+                    <button type="button" class="btn btn-secondary flex-fill" (click)="copiarLink(invitado)">
                         @if (copiado() === invitado.codigo) { ¡Copiado! } @else { Copiar link }
                     </button>
                     <a class="btn btn-success flex-fill" [href]="whatsapp(invitado)" target="_blank"
                         rel="noopener">WhatsApp</a>
                 </div>
 
-                <button type="button" class="btn btn-outline-danger w-100 mt-2" (click)="eliminarInvitado(invitado)">
+                <button type="button" class="btn btn-peligro w-100 mt-2" (click)="eliminarInvitado(invitado)">
                     Eliminar invitación
                 </button>
 
@@ -74,5 +74,3 @@
     }
 </div>
 }
-
-<a class="btn btn-link mt-4" routerLink="/events">← Volver a eventos</a>
