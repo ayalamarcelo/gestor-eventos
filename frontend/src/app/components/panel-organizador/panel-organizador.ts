@@ -1,6 +1,7 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Resumen } from '../../services/resumen.service';
 
 @Component({
@@ -11,28 +12,40 @@ import { Resumen } from '../../services/resumen.service';
 })
 export class PanelOrganizador implements OnInit {
   private readonly resumenService = inject(Resumen);
+  private readonly route = inject(ActivatedRoute);
 
-  datosPanel: any = null;
+  readonly cargando = signal(true);
+  readonly datosPanel = signal<any>(null);
+
   invitadosFiltrados: any[] = [];
   textoFiltro: string = '';
   filtroEstadoActual: string = 'todos';
-  cargando: boolean = true;
   seccionActual: string = 'modificar';
 
   ngOnInit(): void {
-    this.cargarDatos();
+    this.route.paramMap.subscribe(params => {
+      const eventoId = params.get('id');
+      if (eventoId) {
+        this.cargarDatos(eventoId);
+      } else {
+        this.cargando.set(false);
+        console.error('No se encontró el ID del evento en la ruta.');
+      }
+    });
   }
 
-  cargarDatos() {
-    this.resumenService.getResumenPanel().subscribe({
+  cargarDatos(eventoId: string) {
+    this.cargando.set(true);
+
+    this.resumenService.getConfirmaciones(eventoId).subscribe({
       next: (respuesta) => {
-        this.datosPanel = respuesta;
+        this.datosPanel.set(respuesta);
         this.invitadosFiltrados = respuesta.invitados || [];
-        this.cargando = false;
+        this.cargando.set(false);
       },
       error: (err) => {
         console.error('Error al cargar el panel:', err);
-        this.cargando = false;
+        this.cargando.set(false);
       }
     });
   }
@@ -43,10 +56,12 @@ export class PanelOrganizador implements OnInit {
 
   filtrarPorEstado(estado: string) {
     this.filtroEstadoActual = estado;
+    const invitados = this.datosPanel()?.invitados || [];
+
     if (estado === 'todos') {
-      this.invitadosFiltrados = this.datosPanel.invitados;
+      this.invitadosFiltrados = invitados;
     } else {
-      this.invitadosFiltrados = this.datosPanel.invitados.filter((inv: any) => 
+      this.invitadosFiltrados = invitados.filter((inv: any) => 
         inv.estado.toLowerCase() === estado.toLowerCase()
       );
     }
@@ -54,7 +69,9 @@ export class PanelOrganizador implements OnInit {
 
   filtrarInvitados() {
     const busqueda = this.textoFiltro.toLowerCase();
-    this.invitadosFiltrados = this.datosPanel.invitados.filter((inv: any) =>
+    const invitados = this.datosPanel()?.invitados || [];
+    
+    this.invitadosFiltrados = invitados.filter((inv: any) =>
       inv.nombre.toLowerCase().includes(busqueda)
     );
   }
