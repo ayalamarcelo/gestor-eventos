@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
     <a class="navbar-brand" routerLink="/">The Gathering</a>
@@ -14,24 +12,15 @@
         </li>
       </ul>
     </div>
-=======
 <header class="nav">
   <div class="nav-contenido">
     @if (volverActual(); as valor) {
     <a class="volver" [routerLink]="valor.ruta">← {{ valor.texto }}</a>
     }
     <a class="marca" routerLink="/"><em>The</em> Gathering</a>
->>>>>>> 9978fd8 (feat: nav con marca centrada y botón volver según ruta)
   </div>
 </header>
 
 <div class="container mt-4">
   <router-outlet />
 </div>
-<<<<<<< HEAD
-=======
-<router-outlet />
->>>>>>> 5d3640c (feat: configure routes and router-outlet to display events)
-=======
-
->>>>>>> 9978fd8 (feat: nav con marca centrada y botón volver según ruta)
