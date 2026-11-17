@@ -17,7 +17,7 @@ export class eventList implements OnInit {
   error = signal<string | null>(null);
 
   ngOnInit() {
-    this.loading();
+    this.load();
   }
 
   load() {
@@ -33,5 +33,12 @@ export class eventList implements OnInit {
         this.loading.set(false);
       }
     });
+  }
+    esProximo(e: event) {
+    return new Date(e.fecha_hora).getTime() >= Date.now();
+  }
+
+  irAlFormulario() {
+    document.getElementById('form-evento')?.scrollIntoView({ behavior: 'smooth' });
   }
 }
