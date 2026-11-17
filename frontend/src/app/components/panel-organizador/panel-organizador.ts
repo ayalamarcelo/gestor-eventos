@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Resumen } from '../../servicios/resumen';
+import { Resumen } from '../../services/resumen.service';
 
 @Component({
   selector: 'app-panel-organizador',

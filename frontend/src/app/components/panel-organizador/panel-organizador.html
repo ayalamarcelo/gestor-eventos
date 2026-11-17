@@ -6,7 +6,6 @@
 
   <main class="panel-container">
     
-    <!-- ENCABEZADO SUPERIOR DEL EVENTO -->
     <header class="evento-header">
       <div class="evento-info">
         <span class="badge-casamiento">CASAMIENTO</span>
@@ -15,7 +14,6 @@
       </div>
     </header>
 
-    <!-- TARJETAS DE MÉTRICAS SUPERIORES (3 tarjetas, sin restricciones) -->
     <section class="tarjetas-grid" aria-label="Métricas del evento">
       <article class="card card-dark">
         <header class="card-header-icon">
@@ -48,7 +46,6 @@
       </article>
     </section>
 
-    <!-- SECCIÓN PRINCIPAL: TABLA DE INVITADOS (A ancho completo) -->
     <section class="tabla-main-container w-100" aria-label="Listado de invitados">
       <header class="tabla-header-flex">
         <div>
@@ -56,7 +53,6 @@
           <p>Monitoreo de asistencia en tiempo real</p>
         </div>
         
-        <!-- PESTAÑAS DE FILTRO -->
         <nav class="tabs-filtros" aria-label="Filtros de estado">
           <button [class.active]="filtroEstadoActual === 'todos'" (click)="filtrarPorEstado('todos')">Todos ({{ datosPanel?.invitados?.length || 0 }})</button>
           <button [class.active]="filtroEstadoActual === 'asiste'" (click)="filtrarPorEstado('asiste')">Asisten</button>
@@ -65,7 +61,6 @@
         </nav>
       </header>
 
-      <!-- BUSCADOR -->
       <search class="buscador-container">
         <input 
           type="search" 
@@ -76,7 +71,6 @@
         />
       </search>
 
-      <!-- TABLA -->
       <table class="tabla-invitados">
         <thead>
           <tr>
@@ -114,7 +108,6 @@
       </table>
     </section>
 
-    <!-- ALERTA SI NO HAY CONFIRMACIONES -->
     @if (datosPanel?.totalConfirmados === 0) {
       <aside class="alert-warning" role="alert">
         Atención: El evento aún no cuenta con confirmaciones registradas.

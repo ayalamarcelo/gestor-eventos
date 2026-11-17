@@ -1,11 +1,5 @@
-<<<<<<< HEAD
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
-=======
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-// import { PanelOrganizador } from './components/panel-organizador/panel-organizador';
->>>>>>> 80942ac (feat: agrega carpeta components)
 
 @Component({
   selector: 'app-root',
