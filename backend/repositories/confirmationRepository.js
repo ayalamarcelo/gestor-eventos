@@ -8,7 +8,7 @@ const ejecutar = async (nombre, callback) => {
         const pool = await getSQLConnection();
         return await callback(pool.request());
     } catch (error) {
-        throw new Error(`Error en confirmationRepository.${nombre}: ${error.message}`);
+        throw new Error(`Error al ejecutar ${nombre}: ${error.message}`);
     }
 };
 

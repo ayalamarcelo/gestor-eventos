@@ -20,9 +20,9 @@ export class EventDetails implements OnInit {
   readonly error = signal<string | null>(null);
   readonly menuAbierto = signal(false);
 
-  private readonly _eventService = inject(eventService);
-  private readonly _activatedRoute = inject(ActivatedRoute);
-  private readonly _router = inject(Router);
+  private readonly eventService = inject(eventService);
+  private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   
   readonly guardando = signal(false);
   readonly exito = signal<string | null>(null);
@@ -42,7 +42,7 @@ export class EventDetails implements OnInit {
 
 
   cargarEvento() {
-    const id = Number(this._activatedRoute.snapshot.paramMap.get('id'));
+    const id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
 
     if (!Number.isInteger(id) || id <= 0) {
       this.error.set('El id del evento no es válido');
@@ -51,7 +51,7 @@ export class EventDetails implements OnInit {
 
     this.error.set(null);
 
-    this._eventService.getById(id).subscribe({
+    this.eventService.getById(id).subscribe({
       next: (data) => {
         this.evento.set(data);
         this.form.patchValue({
@@ -88,7 +88,7 @@ export class EventDetails implements OnInit {
     this.exito.set(null);
     this.errorGuardar.set(null);
 
-    this._eventService.update(eventoActual.id, datos).subscribe({
+    this.eventService.update(eventoActual.id, datos).subscribe({
       next: (res) => {
         this.guardando.set(false);
         this.exito.set(res.mensaje);
@@ -109,8 +109,8 @@ export class EventDetails implements OnInit {
 
     if (!confirm(`¿Seguro que querés borrar "${eventoActual.titulo}"? No se puede deshacer.`)) return;
 
-    this._eventService.delete(eventoActual.id).subscribe({
-      next: () => this._router.navigate(['/events']),
+    this.eventService.delete(eventoActual.id).subscribe({
+      next: () => this.router.navigate(['/events']),
       error: (err) => this.errorGuardar.set(err.error?.error ?? 'No se pudo borrar el evento')
     });
   }
