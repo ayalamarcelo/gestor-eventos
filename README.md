@@ -156,7 +156,7 @@ npm start -- --host 127.0.0.1
 
 Abrir **<http://127.0.0.1:4200/>**.
 
-> Usar `127.0.0.1` y **no** `localhost`: el backend solo permite pedidos desde `http://127.0.0.1:4200` (CORS). Con `localhost` la app carga pero no trae datos.
+> Usar `127.0.0.1` o`localhost`.
 
 
 ## Resumen rápido
@@ -175,7 +175,7 @@ Todas las rutas cuelgan de `/api`. No hay autenticación: las rutas del organiza
 
 | Método | Ruta | Descripción |
 |--------|------|-------------|
-| GET | `/api/eventos` | Lista los eventos |
+| GET | `/api/eventos` | Lista los eventos, del más nuevo al más viejo, con `invitaciones_total` e `invitaciones_confirmadas`|
 | POST | `/api/eventos` | Crea un evento |
 | GET | `/api/eventos/:id` | Devuelve un evento |
 | PUT | `/api/eventos/:id` | Edita un evento (parcial) |
