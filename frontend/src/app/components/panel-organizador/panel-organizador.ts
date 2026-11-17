@@ -41,6 +41,7 @@ export class PanelOrganizador implements OnInit {
     return this.invitados().filter(i => estado === 'todos' || i.estado.toLowerCase() === estado);
   });
 
+  // Números de las tarjetas
   readonly asisten = computed(() => this.invitados().filter(i => i.estado === 'Asiste'));
   readonly totalPersonas = computed(() => this.asisten().reduce((suma, i) => suma + 1 + i.acompanantes, 0));
   readonly noAsisten = computed(() => this.invitados().filter(i => i.estado === 'No asiste').length);
