@@ -49,4 +49,17 @@ const listarPorEvento = async (eventoId) => {
     }
 };
 
-module.exports = { eventoEsDelOrganizador, insertar, listarPorEvento };
+const eliminar = async (eventoId, invitadoId) => {
+    try {
+        const pool = await getSQLConnection();
+        const resultado = await pool.request()
+            .input('eventoId', sql.Int, eventoId)
+            .input('invitadoId', sql.Int, invitadoId)
+            .query(queries.eliminarInvitado);
+        return resultado.rowsAffected[0];
+    } catch (error) {
+        throw new Error('Error al eliminar un invitado: ' + error.message);
+    }
+};
+
+module.exports = { eventoEsDelOrganizador, insertar, listarPorEvento, eliminar };

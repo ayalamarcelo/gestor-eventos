@@ -1,0 +1,41 @@
+.btn-principal,
+.btn-secundario,
+.btn-peligro {
+  border-radius: 12px;
+  font-weight: 600;
+  padding: 10px 20px;
+}
+
+.btn-principal {
+  background: var(--color-verde);
+  border: 1px solid var(--color-verde);
+  color: #ffffff;
+}
+
+.btn-principal:hover {
+  background: var(--color-verde);
+  color: #ffffff;
+  opacity: 0.9;
+}
+
+.btn-secundario {
+  background: #ffffff;
+  border: 1px solid var(--color-borde);
+  color: var(--color-texto);
+}
+
+.btn-secundario:hover {
+  background: var(--color-tarjeta);
+  color: var(--color-texto);
+}
+
+.btn-peligro {
+  background: #ffffff;
+  border: 1px solid #e8c4c0;
+  color: var(--color-error);
+}
+
+.btn-peligro:hover {
+  background: #fdf0ee;
+  color: var(--color-error);
+}

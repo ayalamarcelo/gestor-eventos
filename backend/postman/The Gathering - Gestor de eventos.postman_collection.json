@@ -1,0 +1,2363 @@
+{
+  "info": {
+    "_postman_id": "c63dee20-a5f7-4b84-8aec-22ac28428979",
+    "name": "The Gathering - Gestor de eventos",
+    "description": "Colección con todas las rutas del backend: la URL ([http://127.0.0.1:3008/api](http://127.0.0.1:3008/api)) y los valores (ids y códigos de los datos de ejemplo) están escritos en cada request.\n\nHay requests que: ✏️ = modifican datos o 🗑️ = borran datos. Para volver a 0, recargar backend/sql/schema.sql.\n\nRequiere: schema.sql, Node 22 y `npm install` en backend.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "20512740"
+  },
+  "item": [
+    {
+      "name": "1. Eventos",
+      "item": [
+        {
+          "name": "Listar eventos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Es un array\", function () { pm.expect(pm.response.json()).to.be.an(\"array\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/eventos",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "eventos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Evento por id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Incluye titulo\", function () { pm.expect(pm.response.json()).to.have.property(\"titulo\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/eventos/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "eventos",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Evento inexistente (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () { pm.response.to.have.status(404); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"No se encuentra evento\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/eventos/999",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "eventos",
+                "999"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Id inválido (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () { pm.response.to.have.status(400); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"valor\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/eventos/abc",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "eventos",
+                "abc"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear evento ✏️",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () { pm.response.to.have.status(201); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Incluye id\", function () { pm.expect(pm.response.json()).to.have.property(\"id\"); });",
+                  "pm.test(\"Incluye titulo\", function () { pm.expect(pm.response.json()).to.have.property(\"titulo\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Mi evento\",\n  \"descripcion\": \"Opcional\",\n  \"fecha_hora\": \"2026-12-01T20:00:00\",\n  \"direccion\": \"Calle 123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/eventos",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "eventos"
+              ]
+            },
+            "description": "Crea un evento del organizador de prueba. Necesita el schema.sql nuevo (Eventos sin columna `codigo`). Cada ejecución crea un evento más."
+          },
+          "response": []
+        },
+        {
+          "name": "Crear evento sin título (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () { pm.response.to.have.status(400); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"título\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"direccion\": \"x\",\n  \"fecha_hora\": \"2026-12-01T20:00:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/eventos",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "eventos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Editar evento - parcial ✏️",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Cena de Fin de Cursada\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/eventos/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "eventos",
+                "1"
+              ]
+            },
+            "description": "Se manda el mismo título para no alterar el evento de ejemplo."
+          },
+          "response": []
+        },
+        {
+          "name": "Editar evento - body vacío (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () { pm.response.to.have.status(400); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"al menos un campo\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/eventos/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "eventos",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Editar evento - título vacío (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () { pm.response.to.have.status(400); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"título\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/eventos/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "eventos",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Editar evento inexistente (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () { pm.response.to.have.status(404); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"No se encuentra evento\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"x\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/eventos/999",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "eventos",
+                "999"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Invitados del evento (organizador)",
+      "item": [
+        {
+          "name": "Crear invitado ✏️",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () { pm.response.to.have.status(201); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "const j = pm.response.json();",
+                  "pm.test(\"Código con formato INV-XXXXXXXX\", function () { pm.expect(j.codigo).to.match(/^INV-[0-9A-F]{8}$/); });",
+                  "pm.test(\"Incluye id, evento_id y nombre\", function () { pm.expect(j).to.include.keys(\"id\", \"evento_id\", \"nombre\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Invitado de prueba\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/eventos/1/invitados",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "eventos",
+                "1",
+                "invitados"
+              ]
+            },
+            "description": "El backend genera el código del invitado. Cada ejecución crea un invitado nuevo; el código se ve en la respuesta."
+          },
+          "response": []
+        },
+        {
+          "name": "Crear invitado sin nombre (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () { pm.response.to.have.status(400); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"nombre\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/eventos/1/invitados",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "eventos",
+                "1",
+                "invitados"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear invitado con nombre vacío (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () { pm.response.to.have.status(400); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"nombre\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"   \"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/eventos/1/invitados",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "eventos",
+                "1",
+                "invitados"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear invitado con nombre numérico (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () { pm.response.to.have.status(400); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"nombre\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": 5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/eventos/1/invitados",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "eventos",
+                "1",
+                "invitados"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear invitado - evento inexistente (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () { pm.response.to.have.status(404); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"Evento no encontrado\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Ana\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/eventos/999/invitados",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "eventos",
+                "999",
+                "invitados"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear invitado - id inválido (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () { pm.response.to.have.status(400); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"eventoId\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Ana\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/eventos/abc/invitados",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "eventos",
+                "abc",
+                "invitados"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar invitados del evento",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Es un array\", function () { pm.expect(pm.response.json()).to.be.an(\"array\"); });",
+                  "pm.test(\"Cada invitado trae nombre, codigo y ya_confirmo\", function () { pm.response.json().forEach(function (i) { pm.expect(i).to.include.keys(\"nombre\", \"codigo\", \"ya_confirmo\"); }); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/eventos/1/invitados",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "eventos",
+                "1",
+                "invitados"
+              ]
+            },
+            "description": "Incluye a los pendientes (ya_confirmo=false) con los datos de la confirmación en null."
+          },
+          "response": []
+        },
+        {
+          "name": "Listar invitados - evento inexistente (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () { pm.response.to.have.status(404); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"Evento no encontrado\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/eventos/999/invitados",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "eventos",
+                "999",
+                "invitados"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar invitados - id inválido (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () { pm.response.to.have.status(400); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"eventoId\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/eventos/abc/invitados",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "eventos",
+                "abc",
+                "invitados"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar invitado - inexistente (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () { pm.response.to.have.status(404); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"Invitado no encontrado\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/eventos/1/invitados/99999",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "eventos",
+                "1",
+                "invitados",
+                "99999"
+              ]
+            },
+            "description": "Con un id que no existe da 404. Para probar el 204, cambiá el id del final de la URL por el de un invitado real (se borra de verdad)."
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar invitado - evento inexistente (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () { pm.response.to.have.status(404); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"Evento no encontrado\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/eventos/999/invitados/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "eventos",
+                "999",
+                "invitados",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar invitado - id inválido (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () { pm.response.to.have.status(400); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"invitadoId\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/eventos/1/invitados/abc",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "eventos",
+                "1",
+                "invitados",
+                "abc"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Invitación (tarjeta)",
+      "item": [
+        {
+          "name": "Tarjeta - invitado que ya confirmó",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"ya_confirmo es true\", function () { pm.expect(pm.response.json().ya_confirmo).to.eql(true); });",
+                  "pm.test(\"Incluye evento\", function () { pm.expect(pm.response.json()).to.have.property(\"evento\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/invitaciones/INV-MAT001",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "invitaciones",
+                "INV-MAT001"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Tarjeta - invitado pendiente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"ya_confirmo es false\", function () { pm.expect(pm.response.json().ya_confirmo).to.eql(false); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/invitaciones/INV-GEN006",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "invitaciones",
+                "INV-GEN006"
+              ]
+            },
+            "description": "INV-GEN006 es el pendiente de los datos de ejemplo. Deja de serlo después de correr la carpeta 6."
+          },
+          "response": []
+        },
+        {
+          "name": "Tarjeta - código inexistente (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () { pm.response.to.have.status(404); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"no encontrada\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/invitaciones/NOEXISTE",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "invitaciones",
+                "NOEXISTE"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Confirmación (invitado, por código)",
+      "item": [
+        {
+          "name": "Ver confirmación",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Incluye asiste\", function () { pm.expect(pm.response.json()).to.have.property(\"asiste\"); });",
+                  "pm.test(\"Incluye restriccion\", function () { pm.expect(pm.response.json()).to.have.property(\"restriccion\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/invitados/INV-MAT001/confirmacion",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "invitados",
+                "INV-MAT001",
+                "confirmacion"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Ver confirmación - pendiente (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () { pm.response.to.have.status(404); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"Todavía no confirmó\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/invitados/INV-GEN006/confirmacion",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "invitados",
+                "INV-GEN006",
+                "confirmacion"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Ver confirmación - invitado inexistente (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () { pm.response.to.have.status(404); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"Invitado no encontrado\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/invitados/INV-NOEXISTE/confirmacion",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "invitados",
+                "INV-NOEXISTE",
+                "confirmacion"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Ver confirmación - código muy largo (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () { pm.response.to.have.status(400); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"no es válido\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/invitados/CODIGO-DEMASIADO-LARGO/confirmacion",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "invitados",
+                "CODIGO-DEMASIADO-LARGO",
+                "confirmacion"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Modificar confirmación ✏️",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Incluye cantidad_acompanantes\", function () { pm.expect(pm.response.json()).to.have.property(\"cantidad_acompanantes\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"asiste\": true,\n  \"cantidad_acompanantes\": 1,\n  \"restriccion\": \"vegetariano\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/invitados/INV-MAR002/confirmacion",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "invitados",
+                "INV-MAR002",
+                "confirmacion"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Modificar confirmación - con alergia ✏️",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"asiste\": true,\n  \"cantidad_acompanantes\": 0,\n  \"restriccion\": \"alergia\",\n  \"detalle_restriccion\": \"Alergia al maní y frutos secos\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/invitados/INV-SOL004/confirmacion",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "invitados",
+                "INV-SOL004",
+                "confirmacion"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "No asiste con acompañantes (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () { pm.response.to.have.status(400); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"Si no asiste\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"asiste\": false,\n  \"cantidad_acompanantes\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/invitados/INV-SEB005/confirmacion",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "invitados",
+                "INV-SEB005",
+                "confirmacion"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Restricción inválida (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () { pm.response.to.have.status(400); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"restriccion\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"asiste\": true,\n  \"restriccion\": \"gluten\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/invitados/INV-MAR002/confirmacion",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "invitados",
+                "INV-MAR002",
+                "confirmacion"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "asiste como texto (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () { pm.response.to.have.status(400); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"asiste\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"asiste\": \"true\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/invitados/INV-MAR002/confirmacion",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "invitados",
+                "INV-MAR002",
+                "confirmacion"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Acompañantes negativos (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () { pm.response.to.have.status(400); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"cantidad_acompanantes\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"asiste\": true,\n  \"cantidad_acompanantes\": -1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/invitados/INV-MAR002/confirmacion",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "invitados",
+                "INV-MAR002",
+                "confirmacion"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sin body (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () { pm.response.to.have.status(400); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/invitados/INV-MAR002/confirmacion",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "invitados",
+                "INV-MAR002",
+                "confirmacion"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT sobre invitado pendiente (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () { pm.response.to.have.status(404); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"Todavía no confirmó\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"asiste\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/invitados/INV-GEN006/confirmacion",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "invitados",
+                "INV-GEN006",
+                "confirmacion"
+              ]
+            },
+            "description": "El PUT no crea la confirmación."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "5. Organizador sobre confirmaciones",
+      "item": [
+        {
+          "name": "Listar confirmaciones del evento",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Incluye evento\", function () { pm.expect(pm.response.json()).to.have.property(\"evento\"); });",
+                  "pm.test(\"Incluye confirmaciones\", function () { pm.expect(pm.response.json()).to.have.property(\"confirmaciones\"); });",
+                  "pm.test(\"Incluye total\", function () { pm.expect(pm.response.json()).to.have.property(\"total\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/eventos/1/confirmaciones",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "eventos",
+                "1",
+                "confirmaciones"
+              ]
+            },
+            "description": "OJO: cada confirmación trae invitado_id pero no el nombre del invitado."
+          },
+          "response": []
+        },
+        {
+          "name": "Listar con filtro restricción=celiaco",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Solo celíacos\", function () { pm.response.json().confirmaciones.forEach(function (c) { pm.expect(c.restriccion).to.eql(\"celiaco\"); }); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/eventos/1/confirmaciones?restriccion=celiaco",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "eventos",
+                "1",
+                "confirmaciones"
+              ],
+              "query": [
+                {
+                  "key": "restriccion",
+                  "value": "celiaco"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar - evento inexistente (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () { pm.response.to.have.status(404); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"no existe\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/eventos/999/confirmaciones",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "eventos",
+                "999",
+                "confirmaciones"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Modificar confirmación de un invitado ✏️",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"asiste\": true,\n  \"cantidad_acompanantes\": 0,\n  \"restriccion\": \"ninguna\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/eventos/1/invitados/4/confirmacion",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "eventos",
+                "1",
+                "invitados",
+                "4",
+                "confirmacion"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Modificar - evento inexistente (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () { pm.response.to.have.status(404); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"Confirmación no encontrada\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"asiste\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/eventos/99/invitados/4/confirmacion",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "eventos",
+                "99",
+                "invitados",
+                "4",
+                "confirmacion"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Modificar - id inválido (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () { pm.response.to.have.status(400); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"eventoId\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"asiste\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/eventos/abc/invitados/4/confirmacion",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "eventos",
+                "abc",
+                "invitados",
+                "4",
+                "confirmacion"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Borrar confirmación de un invitado 🗑️",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () { pm.response.to.have.status(204); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/eventos/1/invitados/4/confirmacion",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "eventos",
+                "1",
+                "invitados",
+                "4",
+                "confirmacion"
+              ]
+            },
+            "description": "El invitado 4 es INV-SOL004 y vuelve a quedar pendiente. Para restaurarlo, recargar schema.sql."
+          },
+          "response": []
+        },
+        {
+          "name": "Comprobar que quedó pendiente (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () { pm.response.to.have.status(404); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"Todavía no confirmó\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/invitados/INV-SOL004/confirmacion",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "invitados",
+                "INV-SOL004",
+                "confirmacion"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Borrar otra vez (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () { pm.response.to.have.status(404); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"Confirmación no encontrada\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/eventos/1/invitados/4/confirmacion",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "eventos",
+                "1",
+                "invitados",
+                "4",
+                "confirmacion"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "6. Confirmar asistencia (invitado)",
+      "item": [
+        {
+          "name": "Confirmar asistencia ✏️",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () { pm.response.to.have.status(201); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Incluye id\", function () { pm.expect(pm.response.json()).to.have.property(\"id\"); });",
+                  "pm.test(\"Incluye invitado_id\", function () { pm.expect(pm.response.json()).to.have.property(\"invitado_id\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"asiste\": true,\n  \"cantidad_acompanantes\": 1,\n  \"restriccion\": \"vegetariano\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/invitaciones/INV-GEN006/confirmacion",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "invitaciones",
+                "INV-GEN006",
+                "confirmacion"
+              ]
+            },
+            "description": "Confirma al invitado pendiente de los datos de ejemplo (INV-GEN006). Después de esto ya no está pendiente: las requests de las carpetas 3 y 4 que dependen de eso dejan de dar lo esperado hasta recargar schema.sql."
+          },
+          "response": []
+        },
+        {
+          "name": "Confirmar de nuevo → ya confirmó (409)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 409\", function () { pm.response.to.have.status(409); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"ya confirmó\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"asiste\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/invitaciones/INV-GEN006/confirmacion",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "invitaciones",
+                "INV-GEN006",
+                "confirmacion"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Confirmar con datos inválidos (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () { pm.response.to.have.status(400); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"asiste\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"asiste\": \"si\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/invitaciones/INV-GEN006/confirmacion",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "invitaciones",
+                "INV-GEN006",
+                "confirmacion"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Confirmar - código inexistente (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () { pm.response.to.have.status(404); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });",
+                  "pm.test(\"Mensaje de error esperado\", function () { pm.expect(pm.response.json().error).to.include(\"no encontrada\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"asiste\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/invitaciones/NOEXISTE/confirmacion",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "invitaciones",
+                "NOEXISTE",
+                "confirmacion"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Destructiva",
+      "item": [
+        {
+          "name": "Borrar evento (cascada) 🗑️",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200 (borrado) o 404 (id inexistente)\", function () { pm.expect([200, 404]).to.include(pm.response.code); });",
+                  "pm.test(\"Responde JSON\", function () { pm.response.to.be.json; });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:3008/api/eventos/999",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "3008",
+              "path": [
+                "api",
+                "eventos",
+                "999"
+              ]
+            },
+            "description": "Borra el evento y TODOS sus invitados y confirmaciones. Con el id 999 da 404 y no borra nada. Cambiá el 999 de la URL por 1 solo si querés borrar los datos de ejemplo."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
