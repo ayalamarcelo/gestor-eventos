@@ -1,0 +1,137 @@
+@if (cargando()) {
+<main class="loading-container">
+  <p>Cargando panel del organizador...</p>
+</main>
+} @else {
+
+<main class="panel-container">
+
+  <header class="evento-header">
+    <div class="evento-info">
+      <span class="badge-casamiento">CASAMIENTO</span>
+      <h1>{{ datosPanel()?.tituloEvento || '' }}</h1>
+      <p class="fecha-ubicacion">{{ datosPanel()?.fecha }} · {{ datosPanel()?.ubicacion }}</p>
+    </div>
+  </header>
+
+  <nav class="panel-nav-tabs" aria-label="Secciones del panel">
+    <div class="tabs-wrapper">
+      <button class="tab-btn">
+        <i class="icon-sliders" aria-hidden="true"></i> Modificar Evento
+      </button>
+      <button class="tab-btn">
+        <i class="icon-share-2" aria-hidden="true"></i> Compartir Evento
+      </button>
+    </div>
+  </nav>
+
+  <section class="tarjetas-grid" aria-label="Métricas del evento">
+    <article class="card card-dark">
+      <header class="card-header-icon">
+        <h2>Personas confirmadas</h2>
+        <i class="icon-users" aria-hidden="true"></i>
+      </header>
+      <p class="card-number">{{ datosPanel()?.totalConfirmados || 0 }}</p>
+      <p>asistentes totales</p>
+      <small>{{ datosPanel()?.invitacionesConfirmadas || 0 }} invitaciones confirmadas</small>
+    </article>
+
+    <article class="card">
+      <header class="card-header-icon">
+        <h2>No asisten</h2>
+        <i class="icon-cancel" aria-hidden="true"></i>
+      </header>
+      <p class="card-number">{{ datosPanel()?.totalNoAsisten || 0 }}</p>
+      <p>invitación cancelada</p>
+      <small class="text-muted">{{ datosPanel()?.ultimoCancelado || 'Federico Gómez' }}</small>
+    </article>
+
+    <article class="card">
+      <header class="card-header-icon">
+        <h2>Pendientes</h2>
+        <i class="icon-clock" aria-hidden="true"></i>
+      </header>
+      <p class="card-number">{{ datosPanel()?.totalPendientes || 0 }}</p>
+      <p>sin respuesta</p>
+      <small>{{ datosPanel()?.porcentajeRespuesta || '0%' }} de respuesta global</small>
+    </article>
+
+    <article class="card">
+      <header class="card-header-icon">
+        <h2>Restricciones</h2>
+        <i class="icon-utensils" aria-hidden="true"></i>
+      </header>
+      <p class="card-number">{{ datosPanel()?.totalRestricciones || 4 }}</p>
+      <p>menús especiales</p>
+      <small>Requieren aviso al catering</small>
+    </article>
+  </section>
+
+  <section class="tabla-main-container w-100" aria-label="Listado de invitados">
+    <header class="tabla-header-flex">
+      <div>
+        <h2>Invitados confirmados</h2>
+        <p>Monitoreo de asistencia en tiempo real</p>
+      </div>
+
+      <nav class="tabs-filtros" aria-label="Filtros de estado">
+        <button [class.active]="filtroEstadoActual === 'todos'" (click)="filtrarPorEstado('todos')">Todos ({{
+          datosPanel()?.invitados?.length || 0 }})</button>
+        <button [class.active]="filtroEstadoActual === 'asiste'" (click)="filtrarPorEstado('asiste')">Asisten</button>
+        <button [class.active]="filtroEstadoActual === 'pendiente'"
+          (click)="filtrarPorEstado('pendiente')">Pendientes</button>
+        <button [class.active]="filtroEstadoActual === 'no asiste'" (click)="filtrarPorEstado('no asiste')">No
+          asisten</button>
+      </nav>
+    </header>
+
+    <search class="buscador-container">
+      <input type="search" class="input-buscador" [(ngModel)]="textoFiltro" (input)="filtrarInvitados()"
+        placeholder="Filtrar invitado por nombre..." />
+    </search>
+
+    <table class="tabla-invitados">
+      <thead>
+        <tr>
+          <th scope="col">INVITADO / CONTACTO</th>
+          <th scope="col">ACOMPAÑANTES</th>
+          <th scope="col">RESTRICCIÓN</th>
+          <th scope="col">ESTADO</th>
+          <th scope="col">LINK PERSONAL</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (invitado of invitadosFiltrados; track invitado.id) {
+        <tr>
+          <td>
+            <div class="contacto-celda">
+              <span class="avatar-iniciales" aria-hidden="true">{{ invitado.iniciales }}</span>
+              <span>{{ invitado.nombre }}</span>
+            </div>
+          </td>
+          <td>{{ invitado.acompanantes }}</td>
+          <td><span class="badge-tag">{{ invitado.restriccion || 'Estándar' }}</span></td>
+          <td>
+            <span class="estado-badge" [ngClass]="invitado.estado.toLowerCase()">
+              {{ invitado.estado }}
+            </span>
+          </td>
+          <td><a href="#" class="link-accion">{{ invitado.linkAccion || 'Ver tarjeta' }}</a></td>
+        </tr>
+        } @empty {
+        <tr>
+          <td colspan="5" class="text-center">No se encontraron invitados con ese filtro.</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </section>
+
+  @if (datosPanel()?.totalConfirmados === 0) {
+  <aside class="alert-warning" role="alert">
+    Atención: El evento aún no cuenta con confirmaciones registradas.
+  </aside>
+  }
+
+</main>
+}

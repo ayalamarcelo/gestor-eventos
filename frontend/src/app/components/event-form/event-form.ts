@@ -1,16 +1,18 @@
-import { Component, inject, output, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { eventService } from '../../services/event.service';
 
 @Component({
   selector: 'app-evento-form',
   imports: [ReactiveFormsModule],
-  templateUrl: './event-form.html'
+  templateUrl: './event-form.html',
+  styleUrl: './event-form.css'
 })
 export class eventForm {
   private eventService = inject(eventService);
+  private router = inject(Router);
 
-  created = output<void>();
   sending = signal(false);
   error = signal<string | null>(null);
 
@@ -44,12 +46,10 @@ export class eventForm {
       direccion: v.direccion
     }).subscribe({
       next: () => {
-        this.form.reset();
         this.sending.set(false);
-        this.created.emit();
+        this.router.navigate(['/eventos']);
       },
       error: (err) => {
-        console.log('Error al crear:', err);
         this.error.set(err.error?.error ?? 'No se pudo crear el evento');
         this.sending.set(false);
       }
