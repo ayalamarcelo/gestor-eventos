@@ -17,13 +17,4 @@ export const routes: Routes = [
         component: EventDetails,
         data: { volver: { ruta: '/events', texto: 'Mis eventos' } }
     },
-    {
-        path: 'events',
-        component: eventList
-    },
-    {
-        path: '',
-        redirectTo: 'events',
-        pathMatch: 'full'
-    }
 ];
