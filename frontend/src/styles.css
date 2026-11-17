@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap');
 
 :root {
+    --fuente-display: 'Playfair Display', serif;
     --color-fondo: #f7f3ea;
     --color-tarjeta: #fdfcf7;
     --color-borde: #e9e2d0;
@@ -71,3 +72,20 @@ h3 {
     font-weight: 600;
     text-decoration: none;
 }
+.boton {
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 18px;
+  color: var(--color-texto);
+  background: var(--color-tarjeta);
+  border: 1px solid var(--color-borde);
+  border-radius: 6px;
+  cursor: pointer;
+}
+.boton-verde {
+  background: var(--color-verde);
+  border-color: var(--color-verde);
+  color: #fff;
+}
+.boton:disabled { opacity: 0.6; cursor: not-allowed; }
