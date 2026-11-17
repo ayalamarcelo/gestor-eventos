@@ -1,34 +1,51 @@
-<form [formGroup]="form" (ngSubmit)="send()">
-  <label>Título
-    <input formControlName="titulo" />
-  </label>
-  @if (form.controls.titulo.touched && form.controls.titulo.invalid) {
-    <small class="error">El título es obligatorio (máximo 120 caracteres)</small>
-  }
+<form class="tarjeta-form" [formGroup]="form" (ngSubmit)="send()">
+  <div class="cabecera-form">
+    <div>
+      <span class="etiqueta">Paso 1 MVP</span>
+      <h2>Creá un nuevo evento</h2>
+    </div>
+    <span class="chip">Formulario simplificado</span>
+  </div>
 
-  <label>Descripción
-    <textarea formControlName="descripcion"></textarea>
+  <p class="ayuda">Completá solo los datos esenciales requeridos para este MVP.</p>
+
+  <label class="campo">
+    <span>Título del evento <b class="req">*</b></span>
+    <input formControlName="titulo" placeholder="Ej: Cena de fin de cursada" />
+    @if (form.controls.titulo.touched && form.controls.titulo.invalid) {
+      <small class="error">El título es obligatorio (máximo 120 caracteres)</small>
+    }
   </label>
 
-  <label>Fecha y hora
+  <label class="campo">
+    <span>Descripción / Mensaje</span>
+    <textarea formControlName="descripcion" placeholder="Contales a tus invitados de qué se trata..."></textarea>
+  </label>
+
+  <label class="campo">
+    <span>Fecha y hora <b class="req">*</b></span>
     <input type="datetime-local" formControlName="fecha_hora" />
+    @if (form.controls.fecha_hora.touched && form.controls.fecha_hora.invalid) {
+      <small class="error">La fecha y hora es obligatoria</small>
+    }
   </label>
-  @if (form.controls.fecha_hora.touched && form.controls.fecha_hora.invalid) {
-    <small class="error">La fecha y hora es obligatoria</small>
-  }
 
-  <label>Dirección
-    <input formControlName="direccion" />
+  <label class="campo">
+    <span>Dirección completa <b class="req">*</b></span>
+    <input formControlName="direccion" placeholder="Ej: Av. Rivadavia 1234, Buenos Aires" />
+    @if (form.controls.direccion.touched && form.controls.direccion.invalid) {
+      <small class="error">La dirección es obligatoria (máximo 200 caracteres)</small>
+    }
   </label>
-  @if (form.controls.direccion.touched && form.controls.direccion.invalid) {
-    <small class="error">La dirección es obligatoria (máximo 200 caracteres)</small>
-  }
 
   @if (error()) {
-    <p class="error">{{ error() }}</p>
+    <p class="error-general">{{ error() }}</p>
   }
 
-  <button type="submit" [disabled]="sending()">
-    {{ sending() ? 'Creando...' : 'Crear evento' }}
-  </button>
+  <div class="acciones-form">
+    <button type="button" class="boton" (click)="form.reset()">Limpiar</button>
+    <button type="submit" class="boton boton-verde" [disabled]="sending()">
+      {{ sending() ? 'Guardando...' : '✓ Guardar y crear evento' }}
+    </button>
+  </div>
 </form>

@@ -5,7 +5,8 @@ import { eventService } from '../../services/event.service';
 @Component({
   selector: 'app-evento-form',
   imports: [ReactiveFormsModule],
-  templateUrl: './event-form.html'
+  templateUrl: './event-form.html',
+  styleUrl: './event-form.css'
 })
 export class eventForm {
   private eventService = inject(eventService);
@@ -49,7 +50,6 @@ export class eventForm {
         this.created.emit();
       },
       error: (err) => {
-        console.log('Error al crear:', err);
         this.error.set(err.error?.error ?? 'No se pudo crear el evento');
         this.sending.set(false);
       }
