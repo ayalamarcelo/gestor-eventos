@@ -62,14 +62,13 @@ h1 em { color: var(--color-dorado); font-style: italic; }
 }
 .cuenta { font-size: 13px; color: var(--color-texto-suave); }
 
-.grid {
+
+.lista {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
   gap: 24px;
-  align-items: start;
 }
-.lista { display: flex; flex-direction: column; gap: 24px; }
-.vacio { color: var(--color-texto-suave); }
+.vacio { grid-column: 1 / -1; color: var(--color-texto-suave); }
 
 .tarjeta {
   background: var(--color-tarjeta);
@@ -124,6 +123,14 @@ h3 {
 .acciones .btn-verde { flex: 1; }
 
 @media (max-width: 860px) {
-  .grid { grid-template-columns: 1fr; }
   .cabecera { flex-direction: column; align-items: flex-start; }
 }
+
+.acciones .btn-verde {
+  flex: 1;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+}
+.cabecera a.btn { text-decoration: none; }

@@ -1,13 +1,14 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { eventService } from '../../services/event.service';
 import { event } from '../../models/event.model';
-import { eventForm } from './../event-form/event-form';
 
 @Component({
   selector: 'app-eventos-lista',
-  imports: [DatePipe, eventForm],
-  templateUrl: './event-list.html'
+  imports: [DatePipe, RouterLink],
+  templateUrl: './event-list.html',
+  styleUrl: './event-list.css'
 })
 export class eventList implements OnInit {
   private eventService = inject(eventService);
@@ -29,16 +30,13 @@ export class eventList implements OnInit {
         this.loading.set(false);
       },
       error: () => {
-        this.error.set('No se pudieron cargar los eventos');
+        this.error.set('No se pudieron cargar los eventos. Verificá tu conexión y reintentá.');
         this.loading.set(false);
       }
     });
   }
-    esProximo(e: event) {
-    return new Date(e.fecha_hora).getTime() >= Date.now();
-  }
 
-  irAlFormulario() {
-    document.getElementById('form-evento')?.scrollIntoView({ behavior: 'smooth' });
+  esProximo(e: event) {
+    return new Date(e.fecha_hora).getTime() >= Date.now();
   }
 }

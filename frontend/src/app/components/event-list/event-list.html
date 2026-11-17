@@ -3,9 +3,9 @@
     <div>
       <span class="etiqueta">Panel organizador</span>
       <h1>Hola, <em>Sofía</em></h1>
-      <p class="subtitulo">Gestioná tus eventos y creá nuevas celebraciones para el MVP.</p>
+      <p class="subtitulo">Estos son los eventos que organizás.</p>
     </div>
-    <button type="button" class="boton boton-verde" (click)="irAlFormulario()">+ Crear evento</button>
+    <a class="btn btn-verde" routerLink="/eventos/nuevo">+ Crear evento</a>
   </div>
 
   @if (error()) {
@@ -22,49 +22,37 @@
     </span>
   </div>
 
-  <div class="grid">
-    <div class="lista">
-      @if (loading()) {
-        <p class="vacio">Cargando eventos...</p>
-      } @else if (events().length === 0 && !error()) {
-        <p class="vacio">Todavía no hay eventos.</p>
-      } @else {
-        @for (e of events(); track e.id) {
-          <article class="tarjeta">
-            <div class="cuerpo">
-              @if (esProximo(e)) {
-                <span class="badge">Próximo evento</span>
-              }
-              <h3>{{ e.titulo }}</h3>
-              @if (e.descripcion) {
-                <p class="descripcion">{{ e.descripcion }}</p>
-              }
+  <div class="lista">
+    @if (loading()) {
+      <p class="vacio">Cargando eventos...</p>
+    } @else if (events().length === 0 && !error()) {
+      <p class="vacio">Todavía no hay eventos.</p>
+    } @else {
+      @for (e of events(); track e.id) {
+        <article class="tarjeta">
+          <div class="cuerpo">
+            @if (esProximo(e)) {
+              <span class="badge">Próximo evento</span>
+            }
+            <h3>{{ e.titulo }}</h3>
+            @if (e.descripcion) {
+              <p class="descripcion">{{ e.descripcion }}</p>
+            }
 
-              <ul class="datos">
-                <li>
-                  <span>📅</span>
-                  <span class="fecha">{{ e.fecha_hora | date: "EEEE, d 'de' MMMM 'de' y · HH:mm 'h'" }}</span>
-                </li>
-                <li><span>📍</span><span>{{ e.direccion }}</span></li>
-                <li>
-                  <span>👥</span>
-                  <span class="confirmadas">
-                    {{ e.invitaciones_confirmadas }} de {{ e.invitaciones_total }} invitaciones confirmadas
-                  </span>
-                </li>
-              </ul>
-
-              <div class="acciones">
-                <button type="button" class="boton boton-verde">▦ Administrar evento</button>
-              </div>
-            </div>
-          </article>
-        }
+            <ul class="datos">
+              <li>
+                <span class="fecha">{{ e.fecha_hora | date: "EEEE, d 'de' MMMM 'de' y · HH:mm 'h'" }}</span>
+              </li>
+              <li><span>{{ e.direccion }}</span></li>
+              <li>
+                <span class="confirmadas">
+                  {{ e.invitaciones_confirmadas }} de {{ e.invitaciones_total }} invitaciones confirmadas
+                </span>
+              </li>
+            </ul>
+          </div>
+        </article>
       }
-    </div>
-
-    <aside id="form-evento">
-      <app-evento-form (created)="load()" />
-    </aside>
+    }
   </div>
 </section>
