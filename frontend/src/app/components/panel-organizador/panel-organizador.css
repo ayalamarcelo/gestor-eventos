@@ -203,14 +203,6 @@
   border-color: #2c2a29;
 }
 
-.evento-acciones,
-.btn-primary,
-.btn-outline {
-  display: flex;
-  gap: 20px;
-  padding: 8px 35px;
-}
-
 @media (max-width: 768px) {
   .tabs-wrapper {
     display: flex;
