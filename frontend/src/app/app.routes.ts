@@ -8,6 +8,10 @@ import { PanelOrganizador } from './components/panel-organizador/panel-organizad
 
 export const routes: Routes = [
     {
+        path: 'invitacion/:codigo',
+        loadComponent: () => import('./components/invitation-card/invitation-card').then(m => m.InvitationCard)
+    },
+    {
         path: '',
         redirectTo: 'eventos',
         pathMatch: 'full'

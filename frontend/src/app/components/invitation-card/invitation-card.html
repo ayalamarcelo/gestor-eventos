@@ -1,0 +1,220 @@
+<main class="pagina-principal">
+  @if (cargando()){
+  <p class="estado">Cargando tu Invitacion</p>
+  } @else if (error()) {
+  <section class="error-card" role="alert">
+    <h1>Invitacion no disponible</h1>
+    <p>{{ error() }}</p>
+  </section>
+  } @else if (invitacion(); as inv) {
+  <div class="layout">
+
+    <article class="evento">
+
+      <div class="portada">
+        <p class="fecha">{{inv.evento.fecha_hora | date: "EEEE d 'de' MMMM y" }}</p>
+        <h1>{{ inv.evento.titulo }}</h1>
+      </div>
+
+      <div class="cuerpo">
+
+        @if (inv.evento.descripcion) {
+        <p class="descripcion">{{ inv.evento.descripcion }}</p>
+        }
+
+        <dl class="datos">
+          <div>
+            <dt>Hora de Inicio</dt>
+            <dd>{{ inv.evento.fecha_hora | date: "HH:mm 'hs'" }}</dd>
+          </div>
+          <div>
+            <dt>Dia</dt>
+            <dd>{{ inv.evento.fecha_hora | date: "d 'de' MMM" }}</dd>
+          </div>
+        </dl>
+
+        <p class="direccion">{{ inv.evento.direccion }}</p>
+
+      </div>
+    </article>
+
+
+
+    <section class="panel">
+      <header class="cabecera">
+        <div>
+          <h2>Confirmá tu asistencia</h2>
+          <p class="para">Invitación exclusiva para <strong>{{ inv.nombre_invitado }}</strong></p>
+        </div>
+      </header>
+
+      @if (resultado(); as r) {
+      <div class="mensaje mensaje-ok" role="status">
+        @if (r.asiste) {
+        <h3>¡Listo, te esperamos!</h3>
+        <p>
+          Anotamos tu asistencia@if (r.cantidad_acompanantes > 0) { con {{ r.cantidad_acompanantes }} acompañante(s)}.
+          @if (r.restriccion !== 'ninguna') {
+          Restricción alimentaria: {{ etiquetaRestriccion(r.restriccion) }}.
+          }
+        </p>
+        } @else {
+        <h3>Gracias por avisar</h3>
+        <p>Registramos que no vas a poder asistir.</p>
+        }
+      </div>
+      <button type="button" class="editar" (click)="abrirModal()">¿Cambiaste de idea? Editá o cancelá acá</button>
+      } @else if (yaConfirmo()) {
+      <div class="mensaje" role="status">
+        <h3>Ya respondiste esta invitación</h3>
+        <p>Si algo cambió, podés modificar o cancelar tu respuesta.</p>
+      </div>
+      <button type="button" class="editar" (click)="abrirModal()">Editá o cancelá acá</button>
+      } @else {
+      <form [formGroup]="formulario" (ngSubmit)="confirmarAsistencia()">
+        <fieldset class="campo">
+          <legend>¿Vas a venir? <span class="req">*</span></legend>
+          <div class="opciones">
+            <label class="opcion" [class.activa]="formulario.controls.asiste.value">
+              <input type="radio" formControlName="asiste" [value]="true" />
+              <span>Sí, asisto</span>
+            </label>
+            <label class="opcion" [class.activa]="!formulario.controls.asiste.value">
+              <input type="radio" formControlName="asiste" [value]="false" />
+              <span>No puedo ir</span>
+            </label>
+          </div>
+        </fieldset>
+
+        @if (formulario.controls.asiste.value) {
+        <div class="campo">
+          <label for="acompanantes">¿Cuántos acompañantes llevás? <span class="req">*</span></label>
+          <select id="acompanantes" formControlName="cantidad_acompanantes">
+            @for (opc of opcionesAcompanantes; track opc.valor) {
+            <option [ngValue]="opc.valor">{{ opc.etiqueta }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="campo">
+          <label for="restriccion">Restricción alimentaria <span class="req">*</span></label>
+          <select id="restriccion" formControlName="restriccion">
+            @for (r of restricciones; track r.valor) {
+            <option [ngValue]="r.valor">{{ r.etiqueta }}</option>
+            }
+          </select>
+          <p class="ayuda">El organizador la tendrá en cuenta para tu lugar.</p>
+        </div>
+
+        @if (pideDetalle()) {
+        <div class="campo">
+          <label for="detalle">Contanos más (opcional)</label>
+          <textarea id="detalle" formControlName="detalle_restriccion" maxlength="200" rows="2"
+            placeholder="Ej: alergia al maní y frutos secos"></textarea>
+          @if (formulario.controls.detalle_restriccion.touched &&
+          formulario.controls.detalle_restriccion.hasError('maxlength')) {
+          <p class="ayuda ayuda-error">El detalle no puede superar los 200 caracteres</p>
+          }
+        </div>
+        }
+        }
+
+        @if (errorFormulario()) {
+        <p class="error" role="alert">{{ errorFormulario() }}</p>
+        }
+
+        <button type="submit" class="boton boton-verde confirmar" [disabled]="enviando()">
+          {{ enviando() ? 'Enviando…' : 'Confirmar' }}
+        </button>
+      </form>
+
+      <button type="button" class="editar" (click)="abrirModal()">¿Ya habías respondido? Editá o cancelá acá</button>
+      }
+    </section>
+
+  </div>
+  @if (modalAbierto()) {
+  <div class="modal-fondo" (click)="cerrarModal()">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-titulo"
+      (click)="$event.stopPropagation()">
+
+      <header class="modal-cabecera">
+        <div>
+          <p class="modal-etiqueta">Modificar asistencia</p>
+          <h2 id="modal-titulo">{{ inv.nombre_invitado }}</h2>
+          <p class="para">Evento: <strong>{{ inv.evento.titulo }}</strong></p>
+        </div>
+        <button type="button" class="modal-cerrar" aria-label="Cerrar" (click)="cerrarModal()">×</button>
+      </header>
+
+      @if (cargandoEdicion()) {
+      <p class="estado">Cargando tu respuesta…</p>
+      }
+
+      @if (errorEdicion()) {
+      <p class="error" role="alert">{{ errorEdicion() }}</p>
+      }
+
+      @if (edicionDisponible()) {
+      <form [formGroup]="formularioEdicion" (ngSubmit)="guardarCambios()">
+        <fieldset class="campo">
+          <legend>Estado de asistencia</legend>
+          <div class="opciones">
+            <label class="opcion" [class.activa]="formularioEdicion.controls.asiste.value">
+              <input type="radio" formControlName="asiste" [value]="true" />
+              <span>Sí, asistiré</span>
+            </label>
+            <label class="opcion" [class.activa]="!formularioEdicion.controls.asiste.value">
+              <input type="radio" formControlName="asiste" [value]="false" />
+              <span>No podré asistir</span>
+            </label>
+          </div>
+        </fieldset>
+
+        @if (formularioEdicion.controls.asiste.value) {
+        <div class="campo">
+          <label for="edit-acompanantes">Cantidad de acompañantes</label>
+          <select id="edit-acompanantes" formControlName="cantidad_acompanantes">
+            @for (opc of opcionesAcompanantes; track opc.valor) {
+            <option [ngValue]="opc.valor">{{ opc.etiqueta }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="campo">
+          <label for="edit-restriccion">Restricción alimentaria</label>
+          <select id="edit-restriccion" formControlName="restriccion">
+            @for (r of restricciones; track r.valor) {
+            <option [ngValue]="r.valor">{{ r.etiqueta }}</option>
+            }
+          </select>
+        </div>
+
+        @if (pideDetalleEdicion()) {
+        <div class="campo">
+          <label for="edit-detalle">Contanos más (opcional)</label>
+          <textarea id="edit-detalle" formControlName="detalle_restriccion" maxlength="200" rows="2"></textarea>
+        </div>
+        }
+        }
+
+        <div class="modal-acciones">
+          <button type="button" class="boton" (click)="cerrarModal()">Descartar cambios</button>
+          <button type="submit" class="boton boton-verde" [disabled]="guardandoEdicion()">
+            {{ guardandoEdicion() ? 'Guardando…' : 'Guardar cambios' }}
+          </button>
+        </div>
+      </form>
+      }
+
+      @if (!cargandoEdicion() && !edicionDisponible()) {
+      <div class="modal-acciones">
+        <button type="button" class="boton" (click)="cerrarModal()">Cerrar</button>
+      </div>
+      }
+
+    </div>
+  </div>
+  }
+  }
+</main>
