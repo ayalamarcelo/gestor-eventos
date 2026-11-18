@@ -53,4 +53,13 @@ const listar = async (eventoIdCrudo) => {
     return guestRepository.listarPorEvento(eventoId);
 };
 
-module.exports = { crear, listar };
+const eliminar = async (eventoIdCrudo, invitadoIdCrudo) => {
+    const eventoId = validarId(eventoIdCrudo, 'eventoId');
+    const invitadoId = validarId(invitadoIdCrudo, 'invitadoId');
+    await verificarEvento(eventoId);
+
+    const filas = await guestRepository.eliminar(eventoId, invitadoId);
+    if (filas === 0) throw crearError(404, 'Invitado no encontrado');
+};
+
+module.exports = { crear, listar, eliminar };

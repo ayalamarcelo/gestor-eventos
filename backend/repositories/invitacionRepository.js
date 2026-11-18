@@ -2,6 +2,8 @@ const sql = require('mssql')
 const { getSQLConnection } = require('../database/connection')
 const consulta = require('../database/queries')
 
+const ERROR_UNIQUE = 2627
+
 const buscarInvitacionPorCodigo = async (codigo) => {
     try {
         const pool = await getSQLConnection()
@@ -32,8 +34,7 @@ const insertarConfirmacion = async (invitadoId, datos) => {
         return resultado.recordset[0]
 
     } catch (error) {
-        // 2627 = violación de UNIQUE: dos confirmaciones simultáneas del mismo invitado
-        if (error.number === 2627) {
+        if (error.number === ERROR_UNIQUE) {
             const duplicado = new Error('Este invitado ya confirmó su asistencia')
             duplicado.status = 409
             throw duplicado

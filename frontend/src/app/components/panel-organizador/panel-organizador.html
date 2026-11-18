@@ -1,0 +1,196 @@
+@if (cargando()) {
+<main class="loading-container">
+  <p>Cargando panel del organizador...</p>
+</main>
+} @else if (error()) {
+<main class="loading-container">
+  <p>{{ error() }}</p>
+</main>
+} @else {
+<main class="panel-container">
+
+  <header class="evento-header">
+    <div class="evento-info">
+      <span class="badge-casamiento">EVENTO</span>
+      <h1>{{ evento()?.titulo }}</h1>
+      <p class="fecha-ubicacion">{{ evento()?.fecha_hora | date:'dd/MM/yyyy HH:mm' }} · {{ evento()?.direccion }}</p>
+    </div>
+  </header>
+
+  <nav class="panel-nav-tabs" aria-label="Secciones del evento">
+    <div class="tabs-wrapper">
+      <a class="tab-btn active" [routerLink]="['/eventos', eventoId(), 'asistencias']">Asistencias</a>
+      <a class="tab-btn" [routerLink]="['/eventos', eventoId()]">Evento y plantilla</a>
+      <a class="tab-btn" [routerLink]="['/eventos', eventoId(), 'invitados']">Compartir y QR</a>
+    </div>
+  </nav>
+
+  <section class="tarjetas-grid" aria-label="Métricas del evento">
+    <article class="card card-dark">
+      <header class="card-header-icon">
+        <h2>Personas confirmadas</h2>
+      </header>
+      <p class="card-number">{{ totalPersonas() }}</p>
+      <p>asistentes totales</p>
+      <small>{{ asisten().length }} invitaciones confirmadas</small>
+    </article>
+
+    <article class="card">
+      <header class="card-header-icon">
+        <h2>No asisten</h2>
+      </header>
+      <p class="card-number">{{ noAsisten() }}</p>
+      <p>invitaciones canceladas</p>
+    </article>
+
+    <article class="card">
+      <header class="card-header-icon">
+        <h2>Pendientes</h2>
+      </header>
+      <p class="card-number">{{ pendientes() }}</p>
+      <p>sin respuesta</p>
+      <small>{{ porcentajeRespuesta() }}% de respuesta global</small>
+    </article>
+
+    <article class="card">
+      <header class="card-header-icon">
+        <h2>Restricciones</h2>
+      </header>
+      <p class="card-number">{{ conRestriccion() }}</p>
+      <p>menús especiales</p>
+      <small>Requieren aviso al catering</small>
+    </article>
+  </section>
+
+  <div class="contenido-grid">
+
+    <aside class="restricciones-sidebar" aria-label="Restricciones para el catering">
+      <h2>Para el catering</h2>
+      <p class="sidebar-sub">Restricciones de quienes asisten</p>
+      @for (r of restricciones(); track r.clave) {
+      <div class="restriccion-fila">
+        <div class="restriccion-texto">
+          <span>{{ r.nombre }}</span>
+          <span>{{ r.cantidad }}</span>
+        </div>
+        <div class="barra">
+          <div class="barra-relleno" [style.width.%]="r.porcentaje"></div>
+        </div>
+      </div>
+      }
+    </aside>
+
+    <section class="tabla-main-container" aria-label="Listado de invitados">
+      <header class="tabla-header-flex">
+        <h2>Invitados</h2>
+        <nav class="tabs-filtros" aria-label="Filtros de estado">
+          <button [class.active]="filtroEstado() === 'todos'" (click)="filtroEstado.set('todos')">Todos ({{
+            invitados().length }})</button>
+          <button [class.active]="filtroEstado() === 'asiste'" (click)="filtroEstado.set('asiste')">Asiste</button>
+          <button [class.active]="filtroEstado() === 'pendiente'"
+            (click)="filtroEstado.set('pendiente')">Pendiente</button>
+          <button [class.active]="filtroEstado() === 'no asiste'" (click)="filtroEstado.set('no asiste')">No
+            asiste</button>
+        </nav>
+
+      </header>
+      @if (errorEdicion() && !editando()) {
+      <div class="text-danger mb-2">{{ errorEdicion() }}</div>
+      }
+
+      @if (editando(); as fila) {
+      <div class="modal d-block" tabindex="-1" role="dialog" aria-modal="true" style="background: rgba(0, 0, 0, 0.5)">
+        <div class="modal-dialog modal-dialog-centered">
+          <form class="modal-content" [formGroup]="formulario" (ngSubmit)="guardar()">
+
+            <div class="modal-header">
+              <h3 class="modal-title h5">Respuesta de {{ fila.nombre }}</h3>
+              <button type="button" class="btn-close" aria-label="Cerrar" (click)="editando.set(null)"></button>
+            </div>
+
+            <div class="modal-body">
+              <fieldset class="mb-3">
+                <legend class="form-label fs-6">¿Asiste?</legend>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="asiste-si" formControlName="asiste" [value]="true">
+                  <label class="form-check-label" for="asiste-si">Sí, asiste</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="asiste-no" formControlName="asiste" [value]="false">
+                  <label class="form-check-label" for="asiste-no">No asiste</label>
+                </div>
+              </fieldset>
+
+              @if (formulario.controls.asiste.value) {
+              <label for="cantidad" class="form-label">Acompañantes</label>
+              <select id="cantidad" class="form-select mb-2" formControlName="cantidad">
+                @for (n of opcionesAcompanantes; track n) {
+                <option [ngValue]="n">{{ n }}</option>
+                }
+              </select>
+
+              <label for="restriccion" class="form-label">Restricción alimentaria</label>
+              <select id="restriccion" class="form-select mb-2" formControlName="restriccion">
+                <option value="ninguna">Ninguna</option>
+                <option value="vegetariano">Vegetariano</option>
+                <option value="celiaco">Celíaco</option>
+                <option value="alergia">Alergia</option>
+                <option value="otra">Otra</option>
+              </select>
+
+              @if (pideDetalle()) {
+              <label for="detalle" class="form-label">Detalle (opcional)</label>
+              <input id="detalle" type="text" maxlength="200" class="form-control mb-2" formControlName="detalle">
+              }
+              }
+
+              @if (errorEdicion()) {
+              <div class="text-danger">{{ errorEdicion() }}</div>
+              }
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-secondary" (click)="editando.set(null)">Cancelar</button>
+              <button type="submit" class="btn btn-success">Guardar</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+      }
+
+      <table class="tabla-invitados">
+        <thead>
+          <tr>
+            <th scope="col">INVITADO</th>
+            <th scope="col">ACOMPAÑANTES</th>
+            <th scope="col">RESTRICCIÓN</th>
+            <th scope="col">ESTADO</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (invitado of invitadosFiltrados(); track invitado.id) {
+          <tr>
+            <td>
+              <div class="contacto-celda">
+                <span class="avatar-iniciales" aria-hidden="true">{{ invitado.iniciales }}</span>
+                <span>{{ invitado.nombre }}</span>
+              </div>
+            </td>
+            <td>{{ invitado.acompanantes }}</td>
+            <td><span class="badge-tag">{{ invitado.restriccion || 'Estándar' }}</span></td>
+            <td><span class="estado-badge" [ngClass]="invitado.estado.toLowerCase()">{{ invitado.estado }}</span></td>
+          </tr>
+          } @empty {
+          <tr>
+            <td colspan="5" class="text-center">No se encontraron invitados con ese filtro.</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </section>
+
+  </div>
+
+</main>
+}
