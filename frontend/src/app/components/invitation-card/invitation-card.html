@@ -133,5 +133,87 @@
     </section>
 
   </div>
+   @if (modalAbierto()) {
+  <div class="modal-fondo" (click)="cerrarModal()">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" (click)="$event.stopPropagation()">
+
+      <header class="modal-cabecera">
+        <div>
+          <p class="modal-etiqueta">Modificar asistencia</p>
+          <h2 id="modal-titulo">{{ inv.nombre_invitado }}</h2>
+          <p class="para">Evento: <strong>{{ inv.evento.titulo }}</strong></p>
+        </div>
+        <button type="button" class="modal-cerrar" aria-label="Cerrar" (click)="cerrarModal()">×</button>
+      </header>
+
+      @if (cargandoEdicion()) {
+      <p class="estado">Cargando tu respuesta…</p>
+      }
+
+      @if (errorEdicion()) {
+      <p class="error" role="alert">{{ errorEdicion() }}</p>
+      }
+
+      @if (edicionDisponible()) {
+      <form [formGroup]="formularioEdicion" (ngSubmit)="guardarCambios()">
+        <fieldset class="campo">
+          <legend>Estado de asistencia</legend>
+          <div class="opciones">
+            <label class="opcion" [class.activa]="formularioEdicion.controls.asiste.value">
+              <input type="radio" formControlName="asiste" [value]="true" />
+              <span>Sí, asistiré</span>
+            </label>
+            <label class="opcion" [class.activa]="!formularioEdicion.controls.asiste.value">
+              <input type="radio" formControlName="asiste" [value]="false" />
+              <span>No podré asistir</span>
+            </label>
+          </div>
+        </fieldset>
+
+        @if (formularioEdicion.controls.asiste.value) {
+        <div class="campo">
+          <label for="edit-acompanantes">Cantidad de acompañantes</label>
+          <select id="edit-acompanantes" formControlName="cantidad_acompanantes">
+            @for (opc of opcionesAcompanantes; track opc.valor) {
+            <option [ngValue]="opc.valor">{{ opc.etiqueta }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="campo">
+          <label for="edit-restriccion">Restricción alimentaria</label>
+          <select id="edit-restriccion" formControlName="restriccion">
+            @for (r of restricciones; track r.valor) {
+            <option [ngValue]="r.valor">{{ r.etiqueta }}</option>
+            }
+          </select>
+        </div>
+
+        @if (pideDetalleEdicion()) {
+        <div class="campo">
+          <label for="edit-detalle">Contanos más (opcional)</label>
+          <textarea id="edit-detalle" formControlName="detalle_restriccion" maxlength="200" rows="2"></textarea>
+        </div>
+        }
+        }
+
+        <div class="modal-acciones">
+          <button type="button" class="boton" (click)="cerrarModal()">Descartar cambios</button>
+          <button type="submit" class="boton boton-verde" [disabled]="guardandoEdicion()">
+            {{ guardandoEdicion() ? 'Guardando…' : 'Guardar cambios' }}
+          </button>
+        </div>
+      </form>
+      }
+
+      @if (!cargandoEdicion() && !edicionDisponible()) {
+      <div class="modal-acciones">
+        <button type="button" class="boton" (click)="cerrarModal()">Cerrar</button>
+      </div>
+      }
+
+    </div>
+  </div>
+  }
   }
 </main>
