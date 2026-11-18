@@ -91,7 +91,7 @@
           <label for="acompanantes">¿Cuántos acompañantes llevás? <span class="req">*</span></label>
           <select id="acompanantes" formControlName="cantidad_acompanantes">
             @for (opc of opcionesAcompanantes; track opc.valor) {
-              <option [ngValue]="opc.valor">{{ opc.etiqueta }}</option>
+            <option [ngValue]="opc.valor">{{ opc.etiqueta }}</option>
             }
           </select>
         </div>
@@ -133,9 +133,10 @@
     </section>
 
   </div>
-   @if (modalAbierto()) {
+  @if (modalAbierto()) {
   <div class="modal-fondo" (click)="cerrarModal()">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" (click)="$event.stopPropagation()">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-titulo"
+      (click)="$event.stopPropagation()">
 
       <header class="modal-cabecera">
         <div>
