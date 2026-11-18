@@ -63,13 +63,13 @@
         <p>Registramos que no vas a poder asistir.</p>
         }
       </div>
-      <a class="editar" [routerLink]="['/confirmacion', inv.codigo]">¿Cambiaste de idea? Editá o cancelá acá</a>
+      <button type="button" class="editar" (click)="abrirModal()">¿Cambiaste de idea? Editá o cancelá acá</button>
       } @else if (yaConfirmo()) {
       <div class="mensaje" role="status">
         <h3>Ya respondiste esta invitación</h3>
         <p>Si algo cambió, podés modificar o cancelar tu respuesta.</p>
       </div>
-      <a class="editar" [routerLink]="['/confirmacion', inv.codigo]">Editá o cancelá acá</a>
+      <button type="button" class="editar" (click)="abrirModal()">Editá o cancelá acá</button>
       } @else {
       <form [formGroup]="formulario" (ngSubmit)="confirmarAsistencia()">
         <fieldset class="campo">
@@ -128,7 +128,7 @@
         </button>
       </form>
 
-      <a class="editar" [routerLink]="['/confirmacion', inv.codigo]">¿Ya habías respondido? Editá o cancelá acá</a>
+      <button type="button" class="editar" (click)="abrirModal()">¿Ya habías respondido? Editá o cancelá acá</button>
       }
     </section>
 
