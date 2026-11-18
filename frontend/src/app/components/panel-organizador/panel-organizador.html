@@ -112,17 +112,6 @@
           }
         </tbody>
       </table>
-
-      <div class="agregar-invitado">
-        <input type="text" class="input-buscador" placeholder="Agregar invitado a la lista" maxlength="100"
-          [value]="nuevoNombre()" (input)="nuevoNombre.set($any($event.target).value)"
-          (keyup.enter)="agregarInvitado()" />
-        <button type="button" class="btn-agregar" [disabled]="agregando() || !nuevoNombre().trim()"
-          (click)="agregarInvitado()">+ Agregar</button>
-      </div>
-      @if (errorAgregar()) {
-      <p class="error-agregar">{{ errorAgregar() }}</p>
-      }
     </section>
 
   </div>
