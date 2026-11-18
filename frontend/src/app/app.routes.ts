@@ -1,16 +1,17 @@
 import { Routes } from '@angular/router';
+import { Home } from './components/home/home';
 
 export const routes: Routes = [
     {
         path: '',
-        redirectTo: 'eventos',
-        pathMatch: 'full'
+        component: Home,
     },
     {
         path: 'eventos',
         loadComponent: () => 
            import('./components/event-list/event.list')
-           .then(m => m.eventList)
+           .then(m => m.eventList),
+           data: { volver: { texto: 'Inicio', ruta: '/' } }
     },
     {
         path: 'eventos/nuevo',
@@ -48,6 +49,6 @@ export const routes: Routes = [
     },
     {
         path: '**',
-        redirectTo: 'eventos'
+        redirectTo: ''
     }
 ];
