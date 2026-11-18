@@ -147,13 +147,16 @@
     margin: 0 0 20px; 
     padding: 0; border: 0; 
 }
-.campo label, .campo legend {
+
+.campo > label, .campo > legend {
   display: block;
   margin-bottom: 7px;
   padding: 0;
   font-size: 14px;
   font-weight: 600;
 }
+
+
 .req { 
     color: var(--color-error); 
 }
@@ -183,6 +186,7 @@
 .opcion:has(input:focus-visible) { outline: 2px solid var(--color-dorado); outline-offset: 2px; }
 .opcion input {
   appearance: none;
+   box-sizing: border-box;
   flex: none;
   width: 18px;
   height: 18px;
@@ -190,7 +194,9 @@
   border: 1.5px solid var(--color-texto-suave);
   border-radius: 50%;
 }
-.opcion input:checked { border: 5px solid var(--color-verde); }
+.opcion input:checked { 
+    border: 5px solid var(--color-verde); 
+}
 
 select, textarea, input[type='number'] {
   width: 100%;
