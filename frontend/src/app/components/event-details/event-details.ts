@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { eventService } from '../../services/event.service';
 import { event } from '../../models/event.model';
+import { formatDate } from '@angular/common';
 
 const aInputLocal = (iso: string) => {
   const fecha = new Date(iso);
@@ -26,7 +27,7 @@ export class EventDetails implements OnInit {
   readonly guardando = signal(false);
   readonly exito = signal<string | null>(null);
   readonly errorGuardar = signal<string | null>(null);
-
+  private id = 0;
 
   form = new FormGroup({
     titulo: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.maxLength(120)] }),
@@ -36,27 +37,29 @@ export class EventDetails implements OnInit {
   });
 
   ngOnInit(): void {
-    this.cargarEvento();
+    this.activatedRoute.params.subscribe({
+      next: params => {
+        this.id = Number(params['id']);
+        this.cargarEvento();
+      }
+    });
   }
 
-
   cargarEvento() {
-    const id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
-
-    if (!Number.isInteger(id) || id <= 0) {
+    if (!Number.isInteger(this.id) || this.id <= 0) {
       this.error.set('El id del evento no es válido');
       return;
     }
 
     this.error.set(null);
 
-    this.eventService.getById(id).subscribe({
+    this.eventService.getById(this.id).subscribe({
       next: (data) => {
         this.evento.set(data);
         this.form.patchValue({
           titulo: data.titulo,
           descripcion: data.descripcion ?? '',
-          fecha_hora: aInputLocal(data.fecha_hora),
+          fecha_hora: formatDate(data.fecha_hora, "yyyy-MM-dd'T'HH:mm", 'es'),
           direccion: data.direccion
         });
         this.form.markAsPristine();

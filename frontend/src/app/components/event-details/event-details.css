@@ -171,3 +171,8 @@ textarea:focus {
 .btn-borrar:hover {
     background: color-mix(in srgb, var(--color-error) 8%, white);
 }
+.btn-principal:disabled,
+.btn-secundario:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
