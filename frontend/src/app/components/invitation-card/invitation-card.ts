@@ -30,6 +30,12 @@ export class InvitationCard {
   readonly errorFormulario = signal<string | null>(null)
   readonly resultado = signal<Confirmacion | null>(null)
 
+  readonly modalAbierto = signal(false)
+  readonly cargandoEdicion = signal(false)
+  readonly edicionDisponible = signal(false)
+  readonly guardandoEdicion = signal(false)
+  readonly errorEdicion = signal<string | null>(null)
+
   readonly restricciones: { valor: Restriccion; etiqueta: string }[] = [
     { valor: 'ninguna', etiqueta: 'Ninguna' },
     { valor: 'vegetariano', etiqueta: 'Vegetariano' },
@@ -48,6 +54,13 @@ export class InvitationCard {
   ]
 
   readonly formulario = this._formBuilder.nonNullable.group({
+    asiste: true,
+    cantidad_acompanantes: [0, [Validators.required, Validators.min(0), Validators.max(5)]],
+    restriccion: 'ninguna' as Restriccion,
+    detalle_restriccion: ['', [Validators.maxLength(200)]],
+  })
+
+  readonly formularioEdicion = this._formBuilder.nonNullable.group({
     asiste: true,
     cantidad_acompanantes: [0, [Validators.required, Validators.min(0), Validators.max(5)]],
     restriccion: 'ninguna' as Restriccion,
@@ -86,6 +99,97 @@ export class InvitationCard {
     return this.restricciones.find(restriccion => restriccion.valor === valor)?.etiqueta ?? valor
   }
 
+    abrirModal(): void {
+    const invitacion = this.invitacion()
+    if (!invitacion) return
+
+    this.modalAbierto.set(true)
+    this.errorEdicion.set(null)
+    this.edicionDisponible.set(false)
+    this.cargandoEdicion.set(true)
+
+    this._confirmacionService.obtenerConfirmacionPorCodigoService(invitacion.codigo).subscribe({
+      next: confirmacion => {
+        this.formularioEdicion.setValue({
+          asiste: confirmacion.asiste,
+          cantidad_acompanantes: confirmacion.cantidad_acompanantes,
+          restriccion: confirmacion.restriccion,
+          detalle_restriccion: confirmacion.detalle_restriccion ?? '',
+        })
+        this.edicionDisponible.set(true)
+        this.cargandoEdicion.set(false)
+      },
+      error: (error: HttpErrorResponse) => {
+        this.errorEdicion.set(this.mensajeDeErrorEdicion(error))
+        this.cargandoEdicion.set(false)
+      }
+    })
+  }
+
+  cerrarModal(): void {
+    this.modalAbierto.set(false)
+  }
+
+  pideDetalleEdicion(): boolean {
+    const asiste = this.formularioEdicion.controls.asiste.value
+    const restriccion = this.formularioEdicion.controls.restriccion.value
+    return asiste && (restriccion === 'alergia' || restriccion === 'otra')
+  }
+
+  guardarCambios(): void {
+    const invitacion = this.invitacion()
+    if (!invitacion || this.guardandoEdicion()) return
+
+    if (this.formularioEdicion.invalid) {
+      this.formularioEdicion.markAllAsTouched()
+      return
+    }
+
+    const body = this.armarBody(this.formularioEdicion.getRawValue())
+
+    this.guardandoEdicion.set(true)
+    this.errorEdicion.set(null)
+
+    this._confirmacionService.actualizarConfirmacionService(invitacion.codigo, body).subscribe({
+      next: confirmacion => {
+        this.resultado.set(confirmacion) // el panel muestra la respuesta actualizada
+        this.guardandoEdicion.set(false)
+        this.modalAbierto.set(false)
+      },
+      error: (error: HttpErrorResponse) => {
+        this.guardandoEdicion.set(false)
+        this.errorEdicion.set(this.mensajeDeErrorEdicion(error))
+      }
+    })
+  }
+
+  private armarBody(datos: {
+    asiste: boolean
+    cantidad_acompanantes: number
+    restriccion: Restriccion
+    detalle_restriccion: string
+  }): ConfirmacionRequest {
+    // El backend rechaza (400) acompañantes o restricción si no asiste: se mandan en cero.
+    if (!datos.asiste) {
+      return { asiste: false, cantidad_acompanantes: 0, restriccion: 'ninguna', detalle_restriccion: null }
+    }
+    return {
+      asiste: true,
+      cantidad_acompanantes: Number(datos.cantidad_acompanantes),
+      restriccion: datos.restriccion,
+      detalle_restriccion:
+        datos.restriccion === 'alergia' || datos.restriccion === 'otra'
+          ? datos.detalle_restriccion.trim() || null
+          : null,
+    }
+  }
+
+  private mensajeDeErrorEdicion(error: HttpErrorResponse): string {
+    if ((error.status === 400 || error.status === 404) && error.error?.error) return error.error.error
+    if (error.status === 0) return 'No pudimos conectar con el servidor. Probá de nuevo en unos minutos.'
+    return 'No pudimos guardar los cambios. Probá de nuevo más tarde.'
+  }
+
   confirmarAsistencia(): void {
     const invitacion = this.invitacion()
     if (!invitacion || this.enviando()) return
@@ -98,17 +202,8 @@ export class InvitationCard {
 
     const datos = this.formulario.getRawValue()
 
-    const body: ConfirmacionRequest = datos.asiste ? {
-      asiste: true,
-      cantidad_acompanantes: Number(datos.cantidad_acompanantes),
-      restriccion: datos.restriccion,
-      detalle_restriccion:
-        datos.restriccion === 'alergia' || datos.restriccion === 'otra'
-          ? datos.detalle_restriccion.trim() || null
-          : null,
-    }
-      : { asiste: false, cantidad_acompanantes: 0, restriccion: 'ninguna', detalle_restriccion: null }
-
+    const body = this.armarBody(datos)
+    
     this.enviando.set(true)
     this.errorFormulario.set(null)
 
