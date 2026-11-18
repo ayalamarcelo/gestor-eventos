@@ -108,24 +108,4 @@ export class PanelOrganizador implements OnInit {
       }
     });
   }
-
-  agregarInvitado() {
-    const nombre = this.nuevoNombre().trim();
-    if (!nombre) return;
-
-    this.agregando.set(true);
-    this.errorAgregar.set(null);
-
-    this._invitadoService.crearInvitado(this.eventoId(), nombre).subscribe({
-      next: () => {
-        this.nuevoNombre.set('');
-        this.agregando.set(false);
-        this.cargarInvitados();
-      },
-      error: (err) => {
-        this.errorAgregar.set(err.error?.error ?? 'No se pudo agregar el invitado');
-        this.agregando.set(false);
-      }
-    });
-  }
 }

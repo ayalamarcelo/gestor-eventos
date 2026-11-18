@@ -110,7 +110,7 @@ module.exports = {
   getInvitadosDeEvento: `
     SELECT i.id, i.nombre, i.codigo, i.creado_en,
            CASE WHEN c.id IS NULL THEN CAST(0 AS BIT) ELSE CAST(1 AS BIT) END AS ya_confirmo,
-           c.asiste, c.cantidad_acompanantes, c.restriccion
+           c.asiste, c.cantidad_acompanantes, c.restriccion, c.detalle_restriccion
     FROM Invitados i
     LEFT JOIN Confirmaciones c ON c.invitado_id = i.id
     WHERE i.evento_id = @eventoId
