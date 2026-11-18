@@ -166,7 +166,6 @@
             <th scope="col">ACOMPAÑANTES</th>
             <th scope="col">RESTRICCIÓN</th>
             <th scope="col">ESTADO</th>
-            <th scope="col">ACCIONES</th>
           </tr>
         </thead>
         <tbody>
@@ -182,9 +181,9 @@
             <td><span class="badge-tag">{{ invitado.restriccion || 'Estándar' }}</span></td>
             <td><span class="estado-badge" [ngClass]="invitado.estado.toLowerCase()">{{ invitado.estado }}</span></td>
             <td>
-              <button class="btn btn-sm btn-outline-secondary" (click)="editar(invitado)">
+              <!-- <button class="btn btn-sm btn-outline-secondary" (click)="editar(invitado)">
                 {{ invitado.yaConfirmo ? 'Editar' : 'Completar respuesta' }}
-              </button>
+              </button> -->
               @if (invitado.yaConfirmo) {
               <button class="btn btn-sm btn-outline-danger ms-1" (click)="eliminarRespuesta(invitado)">Borrar</button>
               }
