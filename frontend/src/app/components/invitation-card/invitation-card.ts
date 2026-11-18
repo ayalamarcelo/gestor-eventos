@@ -7,7 +7,6 @@ import { Confirmacion, ConfirmacionRequest, Invitacion, Restriccion } from '../.
 import { HttpErrorResponse } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 
-const MAX_ACOMPANANTES = 5
 
 @Component({
   imports: [DatePipe, ReactiveFormsModule, RouterLink],
@@ -39,11 +38,18 @@ export class InvitationCard {
     { valor: 'otra', etiqueta: 'Otra' },
   ]
 
-  readonly opcionesAcompanantes = Array.from({ length: MAX_ACOMPANANTES + 1 }, (_, i) => i)
+  readonly opcionesAcompanantes = [
+    { valor: 0, etiqueta: 'Voy sin acompañantes' },
+    { valor: 1, etiqueta: '+1 acompañante' },
+    { valor: 2, etiqueta: '+2 acompañantes' },
+    { valor: 3, etiqueta: '+3 acompañantes' },
+    { valor: 4, etiqueta: '+4 acompañantes' },
+    { valor: 5, etiqueta: '+5 acompañantes' },
+  ]
 
   readonly formulario = this._formBuilder.nonNullable.group({
     asiste: true,
-    cantidad_acompanantes: 0,
+    cantidad_acompanantes: [0, [Validators.required, Validators.min(0), Validators.max(5)]],
     restriccion: 'ninguna' as Restriccion,
     detalle_restriccion: ['', [Validators.maxLength(200)]],
   })
@@ -74,11 +80,6 @@ export class InvitationCard {
     const asiste = this.formulario.controls.asiste.value
     const restriccion = this.formulario.controls.restriccion.value
     return asiste && (restriccion === 'alergia' || restriccion === 'otra')
-  }
-
-  etiquetaAcompanantes(cantidad: number): string {
-    if (cantidad === 0) return 'Voy sin acompañantes'
-    return cantidad === 1 ? '+1 acompañante' : `+${cantidad} acompañantes`
   }
 
   etiquetaRestriccion(valor: Restriccion): string {
