@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { InvitationService } from '../../services/invitation-service';
 import { ConfirmationService } from '../../services/confirmation-service';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -9,7 +9,7 @@ import { DatePipe } from '@angular/common';
 
 
 @Component({
-  imports: [DatePipe, ReactiveFormsModule, RouterLink],
+  imports: [DatePipe, ReactiveFormsModule],
   selector: 'app-invitation-card',
   styleUrl: './invitation-card.css',
   templateUrl: './invitation-card.html',
