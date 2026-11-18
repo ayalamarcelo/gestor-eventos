@@ -114,4 +114,10 @@ export class EventDetails implements OnInit {
       error: (err) => this.errorGuardar.set(err.error?.error ?? 'No se pudo borrar el evento')
     });
   }
+
+  cancelar() {
+  this.exito.set(null);
+  this.errorGuardar.set(null);
+  this.cargarEvento();
+}
 }
