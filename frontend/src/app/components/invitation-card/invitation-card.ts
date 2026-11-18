@@ -99,7 +99,7 @@ export class InvitationCard {
     return this.restricciones.find(restriccion => restriccion.valor === valor)?.etiqueta ?? valor
   }
 
-    abrirModal(): void {
+  abrirModal(): void {
     const invitacion = this.invitacion()
     if (!invitacion) return
 
@@ -152,7 +152,7 @@ export class InvitationCard {
 
     this._confirmacionService.actualizarConfirmacionService(invitacion.codigo, body).subscribe({
       next: confirmacion => {
-        this.resultado.set(confirmacion) // el panel muestra la respuesta actualizada
+        this.resultado.set(confirmacion)
         this.guardandoEdicion.set(false)
         this.modalAbierto.set(false)
       },
@@ -169,7 +169,6 @@ export class InvitationCard {
     restriccion: Restriccion
     detalle_restriccion: string
   }): ConfirmacionRequest {
-    // El backend rechaza (400) acompañantes o restricción si no asiste: se mandan en cero.
     if (!datos.asiste) {
       return { asiste: false, cantidad_acompanantes: 0, restriccion: 'ninguna', detalle_restriccion: null }
     }
@@ -203,7 +202,7 @@ export class InvitationCard {
     const datos = this.formulario.getRawValue()
 
     const body = this.armarBody(datos)
-    
+
     this.enviando.set(true)
     this.errorFormulario.set(null)
 
