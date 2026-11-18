@@ -108,22 +108,33 @@ export class PanelOrganizador implements OnInit {
   cargarInvitados() {
     this.invitadoService.obtenerInvitados(this.eventoId()).subscribe({
       next: (invitados) => {
-        this.invitados.set(invitados.map((i: any) => ({
+        const listaCruda = invitados as unknown as Array<{
+          id: number;
+          codigo: string;
+          nombre: string;
+          ya_confirmo: boolean;
+          asiste?: boolean | number | null;
+          cantidad_acompanantes?: number | null;
+          restriccion?: string | null;
+          detalle_restriccion?: string | null;
+        }>;
+
+        this.invitados.set(listaCruda.map((i) => ({
           id: i.id,
           codigo: i.codigo,
           nombre: i.nombre,
-          iniciales: i.nombre.split(' ').map((p: string) => p[0]).join('').slice(0, 2).toUpperCase(),
+          iniciales: i.nombre.split(' ').filter(p => p !== '').slice(0, 2).map(p => p[0].toUpperCase()).join(''),
           yaConfirmo: i.ya_confirmo,
           asiste: !!i.asiste,
           acompanantes: i.cantidad_acompanantes ?? 0,
-          restriccion: i.restriccion,
+          restriccion: i.restriccion ?? null,
           detalle: i.detalle_restriccion ?? null,
           estado: !i.ya_confirmo ? 'Pendiente' : i.asiste ? 'Asiste' : 'No asiste'
         })));
         this.cargando.set(false);
       },
-      error: (err) => {
-        this.error.set(err.error?.error ?? 'No se pudieron cargar los invitados');
+      error: () => {
+        this.error.set('No se pudieron cargar los invitados');
         this.cargando.set(false);
       }
     });
