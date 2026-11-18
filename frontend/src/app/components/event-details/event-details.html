@@ -68,8 +68,8 @@
             </div>
 
             <div class="acciones">
-                <button type="button" class="btn-secundario" (click)="cargarEvento()">Cancelar</button>
-                <button type="submit" class="btn-principal" [disabled]="guardando()">Guardar cambios</button>
+                <button type="button" class="btn-secundario" [disabled]="form.pristine" (click)="cancelar()">Cancelar</button>
+                <button type="submit" class="btn-principal" [disabled]="form.pristine || guardando()">Guardar cambios</button>
             </div>
         </form>
     </section>
