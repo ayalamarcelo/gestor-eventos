@@ -1,16 +1,6 @@
 import { Routes } from '@angular/router';
-import { eventList } from './components/event-list/event.list';
-import { EventDetails } from './components/event-details/event-details';
-import { Invitados } from './components/guests/guests';
-import { eventForm } from './components/event-form/event-form';
-import { PanelOrganizador } from './components/panel-organizador/panel-organizador';
-
 
 export const routes: Routes = [
-    {
-        path: 'invitacion/:codigo',
-        loadComponent: () => import('./components/invitation-card/invitation-card').then(m => m.InvitationCard)
-    },
     {
         path: '',
         redirectTo: 'eventos',
@@ -18,27 +8,46 @@ export const routes: Routes = [
     },
     {
         path: 'eventos',
-        component: eventList,
-        data: { volver: { texto: 'Inicio', ruta: '/' } }
+        loadComponent: () => 
+           import('./components/event-list/event.list')
+           .then(m => m.eventList)
     },
     {
         path: 'eventos/nuevo',
-        component: eventForm,
-        data: { volver: { texto: 'Mis eventos', ruta: '/eventos' } }
+        loadComponent: () => 
+            import('./components/event-form/event-form')
+            .then(m => m.eventForm),
+            data: { volver: { texto: 'Mis eventos', ruta: '/eventos' } }
     },
     {
         path: 'eventos/:id',
-        component: EventDetails,
-        data: { volver: { ruta: '/eventos/:id/asistencias', texto: 'Volver' } }
+        loadComponent: () =>
+            import('./components/event-details/event-details')
+            .then(m => m.EventDetails),
+            data: { volver: { ruta: '/eventos/:id/asistencias', texto: 'Volver' } }
     },
     {
         path: 'eventos/:id/asistencias',
-        component: PanelOrganizador,
-        data: { volver: { ruta: '/eventos', texto: 'Mis eventos' } }
+        loadComponent: () => 
+            import('./components/panel-organizador/panel-organizador')
+            .then(m => m.PanelOrganizador),
+            data: { volver: { ruta: '/eventos', texto: 'Mis eventos' } }
     },
     {
         path: 'eventos/:id/invitados',
-        component: Invitados,
-        data: { volver: { ruta: '/eventos/:id/asistencias', texto: 'Volver' } }
+        loadComponent: () => 
+            import('./components/guests/guests')
+            .then(m => m.Invitados),
+            data: { volver: { ruta: '/eventos/:id/asistencias', texto: 'Volver' } }
     },
+    {
+        path: 'invitacion/:codigo',
+        loadComponent: () => 
+            import('./components/invitation-card/invitation-card')
+            .then(m => m.InvitationCard)
+    },
+    {
+        path: '**',
+        redirectTo: 'eventos'
+    }
 ];
