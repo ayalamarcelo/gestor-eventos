@@ -7,7 +7,12 @@ import { PanelOrganizador } from './components/panel-organizador/panel-organizad
 
 
 export const routes: Routes = [
-    {   
+    {
+        path: '',
+        redirectTo: 'eventos',
+        pathMatch: 'full'
+    },
+    {
         path: 'eventos',
         component: eventList,
         data: { volver: { texto: 'Inicio', ruta: '/' } }
@@ -17,24 +22,19 @@ export const routes: Routes = [
         component: eventForm,
         data: { volver: { texto: 'Mis eventos', ruta: '/eventos' } }
     },
-    { 
-        path: '', 
-        redirectTo: 'eventos', 
-        pathMatch: 'full' 
-    },
-    {
-        path: 'eventos/:id/invitados',
-        component: Invitados,
-        data: { volver: { ruta: '/eventos', texto: 'Mis eventos' } }
-    },
     {
         path: 'eventos/:id',
         component: EventDetails,
-        data: { volver: { ruta: '/eventos', texto: 'Mis eventos' } }
+        data: { volver: { ruta: '/eventos/:id/asistencias', texto: 'Volver' } }
     },
     {
         path: 'eventos/:id/asistencias',
         component: PanelOrganizador,
         data: { volver: { ruta: '/eventos', texto: 'Mis eventos' } }
+    },
+    {
+        path: 'eventos/:id/invitados',
+        component: Invitados,
+        data: { volver: { ruta: '/eventos/:id/asistencias', texto: 'Volver' } }
     },
 ];

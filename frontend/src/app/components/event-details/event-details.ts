@@ -18,7 +18,6 @@ const aInputLocal = (iso: string) => {
 export class EventDetails implements OnInit {
   readonly evento = signal<event | null>(null);
   readonly error = signal<string | null>(null);
-  readonly menuAbierto = signal(false);
 
   private readonly eventService = inject(eventService);
   private readonly activatedRoute = inject(ActivatedRoute);
@@ -100,9 +99,7 @@ export class EventDetails implements OnInit {
       }
     });
   }
-  toggleMenu() {
-    this.menuAbierto.update(v => !v);
-  }
+ 
   borrar() {
     const eventoActual = this.evento();
     if (!eventoActual) return;
@@ -110,7 +107,7 @@ export class EventDetails implements OnInit {
     if (!confirm(`¿Seguro que querés borrar "${eventoActual.titulo}"? No se puede deshacer.`)) return;
 
     this.eventService.delete(eventoActual.id).subscribe({
-      next: () => this.router.navigate(['/events']),
+      next: () => this.router.navigate(['/eventos']),
       error: (err) => this.errorGuardar.set(err.error?.error ?? 'No se pudo borrar el evento')
     });
   }
