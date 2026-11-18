@@ -120,13 +120,13 @@ h3 {
 .confirmadas { font-weight: 600; }
 
 .acciones { display: flex; gap: 10px; }
-.acciones .btn-verde { flex: 1; }
+.acciones .btn { flex: 1; }
 
 @media (max-width: 860px) {
   .cabecera { flex-direction: column; align-items: flex-start; }
 }
 
-.acciones .btn-verde {
+.acciones .btn {
   flex: 1;
   display: inline-flex;
   justify-content: center;
