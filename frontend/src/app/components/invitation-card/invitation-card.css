@@ -281,7 +281,7 @@ select:focus-visible, textarea:focus-visible, input[type='number']:focus-visible
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 1000;
+  z-index: 2000;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -290,7 +290,10 @@ select:focus-visible, textarea:focus-visible, input[type='number']:focus-visible
 }
 
 .modal {
+  display: block;
+  position: relative;
   width: 100%;
+  height: auto;
   max-width: 520px;
   max-height: 90vh;
   overflow-y: auto;
