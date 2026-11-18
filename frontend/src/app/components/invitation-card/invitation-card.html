@@ -1,42 +1,136 @@
 <main class="pagina-principal">
   @if (cargando()){
-    <p class="estado">Cargando tu Invitacion</p>
+  <p class="estado">Cargando tu Invitacion</p>
   } @else if (error()) {
-    <section class="error-card" role="alert">
-      <h1>Invitacion no disponible</h1>
-      <p>{{ error() }}</p>
-    </section>
+  <section class="error-card" role="alert">
+    <h1>Invitacion no disponible</h1>
+    <p>{{ error() }}</p>
+  </section>
   } @else if (invitacion(); as inv) {
-    <div class="layout">
-       
-        <article class="evento">
+  <div class="layout">
 
-          <div class="portada">
-            <p class="fecha">{{inv.evento.fecha_hora | date: "EEEE d 'de' MMMM y"  }}</p>
-            <h1>{{ inv.evento.titulo }}</h1>
+    <article class="evento">
+
+      <div class="portada">
+        <p class="fecha">{{inv.evento.fecha_hora | date: "EEEE d 'de' MMMM y" }}</p>
+        <h1>{{ inv.evento.titulo }}</h1>
+      </div>
+
+      <div class="cuerpo">
+
+        @if (inv.evento.descripcion) {
+        <p class="descripcion">{{ inv.evento.descripcion }}</p>
+        }
+
+        <dl class="datos">
+          <div>
+            <dt>Hora de Inicio</dt>
+            <dd>{{ inv.evento.fecha_hora | date: "HH:mm 'hs'" }}</dd>
           </div>
+          <div>
+            <dt>Dia</dt>
+            <dd>{{ inv.evento.fecha_hora | date: "d 'de' MMM" }}</dd>
+          </div>
+        </dl>
 
-            <div class="cuerpo">
-              @if (inv.evento.descripcion) {
-                <p class="descripcion">{{ inv.evento.descripcion }}</p>
-              }
+        <p class="direccion">{{ inv.evento.direccion }}</p>
 
-              <dl class="datos">
-                <div>
-                  <dt>Hora de Inicio</dt>
-                  <dd>{{ inv.evento.fecha_hora | date: "HH:mm 'hs'" }}</dd>
-                </div>
-                <div>
-                  <dt>Dia</dt>
-                  <dd>{{ inv.evento.fecha_hora |  date: "d 'de' MMM" }}</dd>
-                </div>
-              </dl>
-
-            </div>
+      </div>
+    </article>
 
 
-        </article>
 
-    </div>
+    <section class="panel">
+      <header class="cabecera">
+        <div>
+          <h2>Confirmá tu asistencia</h2>
+          <p class="para">Invitación exclusiva para <strong>{{ inv.nombre_invitado }}</strong></p>
+        </div>
+      </header>
+
+      @if (resultado(); as r) {
+      <div class="mensaje mensaje-ok" role="status">
+        @if (r.asiste) {
+        <h3>¡Listo, te esperamos!</h3>
+        <p>
+          Anotamos tu asistencia@if (r.cantidad_acompanantes > 0) { con {{ r.cantidad_acompanantes }} acompañante(s)}.
+          @if (r.restriccion !== 'ninguna') {
+          Restricción alimentaria: {{ etiquetaRestriccion(r.restriccion) }}.
+          }
+        </p>
+        } @else {
+        <h3>Gracias por avisar</h3>
+        <p>Registramos que no vas a poder asistir.</p>
+        }
+      </div>
+      <a class="editar" [routerLink]="['/confirmacion', inv.codigo]">¿Cambiaste de idea? Editá o cancelá acá</a>
+      } @else if (yaConfirmo()) {
+      <div class="mensaje" role="status">
+        <h3>Ya respondiste esta invitación</h3>
+        <p>Si algo cambió, podés modificar o cancelar tu respuesta.</p>
+      </div>
+      <a class="editar" [routerLink]="['/confirmacion', inv.codigo]">Editá o cancelá acá</a>
+      } @else {
+      <form [formGroup]="formulario" (ngSubmit)="confirmarAsistencia()">
+        <fieldset class="campo">
+          <legend>¿Vas a venir? <span class="req">*</span></legend>
+          <div class="opciones">
+            <label class="opcion" [class.activa]="formulario.controls.asiste.value">
+              <input type="radio" formControlName="asiste" [value]="true" />
+              <span>Sí, asisto</span>
+            </label>
+            <label class="opcion" [class.activa]="!formulario.controls.asiste.value">
+              <input type="radio" formControlName="asiste" [value]="false" />
+              <span>No puedo ir</span>
+            </label>
+          </div>
+        </fieldset>
+
+        @if (formulario.controls.asiste.value) {
+        <div class="campo">
+          <label for="acompanantes">¿Cuántos acompañantes llevás? <span class="req">*</span></label>
+          <input id="acompanantes" type="number" min="0" formControlName="cantidad_acompanantes" />
+          @if (formulario.controls.cantidad_acompanantes.touched && formulario.controls.cantidad_acompanantes.invalid) {
+          <p class="ayuda ayuda-error">Ingresá un número mayor o igual a 0</p>
+          }
+        </div>
+
+        <div class="campo">
+          <label for="restriccion">Restricción alimentaria <span class="req">*</span></label>
+          <select id="restriccion" formControlName="restriccion">
+            @for (r of restricciones; track r.valor) {
+            <option [ngValue]="r.valor">{{ r.etiqueta }}</option>
+            }
+          </select>
+          <p class="ayuda">El organizador la tendrá en cuenta para tu lugar.</p>
+        </div>
+
+        @if (pideDetalle()) {
+        <div class="campo">
+          <label for="detalle">Contanos más (opcional)</label>
+          <textarea id="detalle" formControlName="detalle_restriccion" maxlength="200" rows="2"
+            placeholder="Ej: alergia al maní y frutos secos"></textarea>
+          @if (formulario.controls.detalle_restriccion.touched &&
+          formulario.controls.detalle_restriccion.hasError('maxlength')) {
+          <p class="ayuda ayuda-error">El detalle no puede superar los 200 caracteres</p>
+          }
+        </div>
+        }
+        }
+
+        @if (errorFormulario()) {
+        <p class="error" role="alert">{{ errorFormulario() }}</p>
+        }
+
+        <button type="submit" class="boton boton-verde confirmar" [disabled]="enviando()">
+          {{ enviando() ? 'Enviando…' : 'Confirmar' }}
+        </button>
+      </form>
+
+      <a class="editar" [routerLink]="['/confirmacion', inv.codigo]">¿Ya habías respondido? Editá o cancelá acá</a>
+      }
+    </section>
+
+  </div>
   }
 </main>
