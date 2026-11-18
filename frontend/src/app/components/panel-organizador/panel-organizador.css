@@ -261,18 +261,6 @@
   background: var(--color-verde);
 }
 
-.agregar-invitado {
-  display: flex;
-  gap: 12px;
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid var(--color-borde);
-}
-
-.agregar-invitado .input-buscador {
-  flex: 1;
-}
-
 .btn-agregar {
   background: var(--color-verde);
   color: #fff;
