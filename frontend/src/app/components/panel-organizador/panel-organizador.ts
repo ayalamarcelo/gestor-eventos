@@ -171,12 +171,4 @@ export class PanelOrganizador implements OnInit {
       error: (err) => this.errorEdicion.set(err.error?.error ?? 'No se pudo guardar')
     });
   }
-
-  eliminarRespuesta(fila: FilaInvitado) {
-    if (!confirm(`¿Borrar la respuesta de ${fila.nombre}? Volverá a estar pendiente.`)) return;
-    this.invitadoService.eliminarConfirmacion(this.eventoId(), fila.id).subscribe({
-      next: () => this.cargarInvitados(),
-      error: (err) => this.errorEdicion.set(err.error?.error ?? 'No se pudo borrar')
-    });
-  }
 }
