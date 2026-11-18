@@ -9,7 +9,6 @@ import { Router, RouterLink, RouterOutlet } from '@angular/router';
 })
 export class App {
   protected readonly title = signal('The Gathering');
-
   private readonly _router = inject(Router);
 
   volverActual() {
@@ -17,6 +16,15 @@ export class App {
     while (ruta.firstChild) {
       ruta = ruta.firstChild;
     }
-    return ruta.data['volver'] ?? null;
+
+    const volver = ruta.data['volver'];
+    if (!volver) {
+      return null;
+    }
+
+    return {
+      texto: volver.texto,
+      ruta: volver.ruta.replace(':id', ruta.paramMap.get('id') ?? '')
+    };
   }
 }

@@ -106,7 +106,7 @@ textarea:focus {
 .btn-secundario {
     background: #fff;
     color: var(--color-texto);
-    border: 1px solid var(--color-borde);
+    border: 1px solid rgb(192, 192, 192);
 }
 
 .aviso {
@@ -150,45 +150,7 @@ textarea:focus {
 .alert .btn-close {
     font-size: 11px;
 }
-.menu {
-    position: relative;
-}
 
-.btn-menu {
-    background: none;
-    cursor: pointer;
-    border: 1px solid #e9e2d000;
-    padding: 0px 10px;
-    font-size: 20px;
-    color: #35352f;
-}
-
-.menu-desplegable {
-    position: absolute;
-    right: 0;
-    top: 100%;
-    margin-top: 6px;
-    min-width: 160px;
-    background: var(--color-tarjeta);
-    border: 1px solid var(--color-borde);
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    z-index: 10;
-}
-
-.menu-item-borrar {
-    width: 100%;
-    padding: 10px 14px;
-    text-align: left;
-    background: none;
-    border: none;
-    color: var(--color-error);
-    cursor: pointer;
-}
-
-.menu-item-borrar:hover {
-    background: #fbeceb;
-}
 .encabezado {
     display: flex;
     justify-content: space-between;
@@ -199,4 +161,13 @@ textarea:focus {
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 20px;
+}
+.btn-borrar {
+    background: var(--color-tarjeta);
+    color: var(--color-error);
+    border: 1px solid  rgba(233, 129, 129, 0.332);
+}
+
+.btn-borrar:hover {
+    background: color-mix(in srgb, var(--color-error) 8%, white);
 }
