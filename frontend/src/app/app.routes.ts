@@ -35,6 +35,6 @@ export const routes: Routes = [
     {
         path: 'eventos/:id/asistencias',
         component: PanelOrganizador,
-        data: { volver: { ruta: '/eventos', texto: 'Mis eventos' } }
+        data: { volver: { ruta: '/events', texto: 'Mis eventos' } }
     },
 ];
