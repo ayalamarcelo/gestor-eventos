@@ -1,0 +1,42 @@
+<main class="pagina-principal">
+  @if (cargando()){
+    <p class="estado">Cargando tu Invitacion</p>
+  } @else if (error()) {
+    <section class="error-card" role="alert">
+      <h1>Invitacion no disponible</h1>
+      <p>{{ error() }}</p>
+    </section>
+  } @else if (invitacion(); as inv) {
+    <div class="layout">
+       
+        <article class="evento">
+
+          <div class="portada">
+            <p class="fecha">{{inv.evento.fecha_hora | date: "EEEE d 'de' MMMM y"  }}</p>
+            <h1>{{ inv.evento.titulo }}</h1>
+          </div>
+
+            <div class="cuerpo">
+              @if (inv.evento.descripcion) {
+                <p class="descripcion">{{ inv.evento.descripcion }}</p>
+              }
+
+              <dl class="datos">
+                <div>
+                  <dt>Hora de Inicio</dt>
+                  <dd>{{ inv.evento.fecha_hora | date: "HH:mm 'hs'" }}</dd>
+                </div>
+                <div>
+                  <dt>Dia</dt>
+                  <dd>{{ inv.evento.fecha_hora |  date: "d 'de' MMM" }}</dd>
+                </div>
+              </dl>
+
+            </div>
+
+
+        </article>
+
+    </div>
+  }
+</main>

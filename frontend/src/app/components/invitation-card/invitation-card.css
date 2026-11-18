@@ -1,0 +1,125 @@
+:root {
+    --fuente-display: 'Playfair Display', serif;
+    --color-fondo:
+        #f7f3ea;
+    --color-tarjeta:
+        #fdfcf7;
+    --color-borde:
+        #e9e2d0;
+    --color-verde:
+        #1f3a2e;
+    --color-dorado:
+        #b08d57;
+    --color-texto:
+        #1c1c1a;
+    --color-texto-suave:
+        #6b6b5e;
+    --color-error:
+        #c0392b;
+    --fuente-titulo: 'Cormorant Garamond', serif;
+    --fuente-texto: 'Inter', sans-serif;
+}
+
+.pagina {
+    padding: 20px;
+}
+
+.layout {
+    display: grid;
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.estado {
+    text-align: center;
+    color: var(--color-texto-suave);
+}
+
+.error-card{
+    max-width: 480px;
+    margin: 32px auto;
+    padding: 24px;
+    background-color: var(--color-tarjeta);
+    border: 1px solid var(--color-borde);
+    border-left: 4px solid var(--color-error);
+    border-radius: 20px;
+}
+
+.error-card h1 {
+     margin: 0 0 8px; 
+     font-size: 1.8rem; 
+}
+.error-card p {
+     margin: 0; 
+}
+
+.evento {
+  background: var(--color-tarjeta);
+  border: 1px solid var(--color-borde);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.portada {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 220px;
+  padding: 24px;
+  background: linear-gradient(160deg, var(--color-verde), var(--verde-claro));
+  color: #fff;
+}
+
+.fecha {
+  margin: 0 0 5px;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-dorado) 60%, white);
+}
+
+.portada h1 { 
+    margin: 0; 
+    font-size: 40px; 
+    line-height: 1.05; 
+}
+
+.cuerpo { 
+    padding: 24px; 
+}
+.descripcion { 
+    margin: 0 0 1.25rem; 
+    font-size: 1.05rem; 
+    line-height: 1.6; 
+    color: var(--color-texto-suave); 
+}
+
+.datos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 0 0 1rem;
+  padding: 1rem;
+  background: var(--color-fondo);
+  border: 1px solid var(--color-borde);
+  border-radius: 16px;
+  text-align: center;
+}
+
+.datos div + div { 
+    border-left: 1px solid var(--color-borde); 
+}
+.datos dt { 
+    font-size: 12px; 
+    color: var(--color-texto-suave); 
+}
+.datos dd { 
+    margin: 0.2rem 0 0; 
+    font-size: 1.1rem; 
+    font-weight: 600; }
+
+.direccion { 
+    margin: 0; 
+    font-size: 0.85rem; 
+    color: var(--color-texto-suave); 
+}
