@@ -89,10 +89,11 @@
         @if (formulario.controls.asiste.value) {
         <div class="campo">
           <label for="acompanantes">¿Cuántos acompañantes llevás? <span class="req">*</span></label>
-          <input id="acompanantes" type="number" min="0" formControlName="cantidad_acompanantes" />
-          @if (formulario.controls.cantidad_acompanantes.touched && formulario.controls.cantidad_acompanantes.invalid) {
-          <p class="ayuda ayuda-error">Ingresá un número mayor o igual a 0</p>
-          }
+          <select id="acompanantes" formControlName="cantidad_acompanantes">
+            @for (opc of opcionesAcompanantes; track opc.valor) {
+              <option [ngValue]="opc.valor">{{ opc.etiqueta }}</option>
+            }
+          </select>
         </div>
 
         <div class="campo">
