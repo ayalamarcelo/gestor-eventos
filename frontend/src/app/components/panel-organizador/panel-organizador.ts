@@ -5,19 +5,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { eventService } from '../../services/event.service';
 import { InvitadoService } from '../../services/guests.service';
 import { event } from '../../models/event.model';
-
-interface FilaInvitado {
-  id: number;
-  codigo: string;
-  nombre: string;
-  iniciales: string;
-  yaConfirmo: boolean;
-  asiste: boolean;
-  acompanantes: number;
-  restriccion: string | null;
-  detalle: string | null;
-  estado: string;
-}
+import { FilaInvitado } from '../../models/guest.model';
 
 @Component({
   selector: 'app-panel-organizador',
@@ -31,7 +19,7 @@ export class PanelOrganizador implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly fb = inject(FormBuilder);
 
-  readonly editando = signal<FilaInvitado | null>(null);
+  
   readonly errorEdicion = signal<string | null>(null);
   readonly opcionesAcompanantes = [0, 1, 2, 3, 4, 5];
 
@@ -49,9 +37,6 @@ export class PanelOrganizador implements OnInit {
   readonly invitados = signal<FilaInvitado[]>([]);
   readonly filtroEstado = signal('todos');
 
-  readonly nuevoNombre = signal('');
-  readonly agregando = signal(false);
-  readonly errorAgregar = signal<string | null>(null);
 
   readonly invitadosFiltrados = computed(() => {
     const estado = this.filtroEstado();
@@ -137,49 +122,6 @@ export class PanelOrganizador implements OnInit {
         this.error.set('No se pudieron cargar los invitados');
         this.cargando.set(false);
       }
-    });
-  }
-
-  pideDetalle(): boolean {
-    const restriccion = this.formulario.controls.restriccion.value;
-    return this.formulario.controls.asiste.value && (restriccion === 'alergia' || restriccion === 'otra');
-  }
-
-  editar(fila: FilaInvitado) {
-    this.errorEdicion.set(null);
-    this.formulario.setValue({
-      asiste: fila.yaConfirmo ? fila.asiste : true,
-      cantidad: fila.acompanantes,
-      restriccion: fila.restriccion ?? 'ninguna',
-      detalle: fila.detalle ?? ''
-    });
-    this.editando.set(fila);
-  }
-
-  guardar() {
-    const fila = this.editando();
-    if (!fila) return;
-    const f = this.formulario.getRawValue();
-
-    const datos = f.asiste
-      ? {
-        asiste: true,
-        cantidad_acompanantes: Number(f.cantidad),
-        restriccion: f.restriccion,
-        detalle_restriccion: this.pideDetalle() ? (f.detalle.trim() || null) : null
-      }
-      : { asiste: false, cantidad_acompanantes: 0, restriccion: 'ninguna', detalle_restriccion: null };
-
-    const llamada = fila.yaConfirmo
-      ? this.invitadoService.actualizarConfirmacion(this.eventoId(), fila.id, datos)
-      : this.invitadoService.crearConfirmacion(fila.codigo, datos);
-
-    llamada.subscribe({
-      next: () => {
-        this.editando.set(null);
-        this.cargarInvitados();
-      },
-      error: (err) => this.errorEdicion.set(err.error?.error ?? 'No se pudo guardar')
     });
   }
 }
