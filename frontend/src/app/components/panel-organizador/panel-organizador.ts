@@ -3,9 +3,11 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { DatePipe, NgClass } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { eventService } from '../../services/event.service';
-import { InvitadoService } from '../../services/guests.service';
+import { GuestsService } from '../../services/guests.service';
+import { ConfirmationService } from '../../services/confirmation-service';
 import { event } from '../../models/event.model';
 import { FilaInvitado } from '../../models/guest.model';
+import { ConfirmacionRequest, Restriccion } from '../../models/invitation.model';
 
 @Component({
   selector: 'app-panel-organizador',
@@ -15,18 +17,19 @@ import { FilaInvitado } from '../../models/guest.model';
 })
 export class PanelOrganizador implements OnInit {
   private readonly eventService = inject(eventService);
-  private readonly invitadoService = inject(InvitadoService);
+  private readonly guestsService = inject(GuestsService);
+  private readonly confirmationService = inject(ConfirmationService);
   private readonly route = inject(ActivatedRoute);
   private readonly fb = inject(FormBuilder);
 
-  
+  readonly editando = signal<FilaInvitado | null>(null);
   readonly errorEdicion = signal<string | null>(null);
   readonly opcionesAcompanantes = [0, 1, 2, 3, 4, 5];
 
   readonly formulario = this.fb.nonNullable.group({
     asiste: true,
     cantidad: 0,
-    restriccion: 'ninguna',
+    restriccion: 'ninguna' as Restriccion,
     detalle: ''
   });
 
@@ -91,7 +94,7 @@ export class PanelOrganizador implements OnInit {
   }
 
   cargarInvitados() {
-    this.invitadoService.obtenerInvitados(this.eventoId()).subscribe({
+    this.guestsService.obtenerInvitados(this.eventoId()).subscribe({
       next: (invitados) => {
         const listaCruda = invitados as unknown as Array<{
           id: number;
@@ -122,6 +125,57 @@ export class PanelOrganizador implements OnInit {
         this.error.set('No se pudieron cargar los invitados');
         this.cargando.set(false);
       }
+    });
+  }
+
+  pideDetalle(): boolean {
+    const r = this.formulario.controls.restriccion.value;
+    return this.formulario.controls.asiste.value && (r === 'alergia' || r === 'otra');
+  }
+
+  editar(fila: FilaInvitado) {
+    this.errorEdicion.set(null);
+    this.formulario.setValue({
+      asiste: fila.yaConfirmo ? fila.asiste : true,
+      cantidad: fila.acompanantes,
+      restriccion: (fila.restriccion ?? 'ninguna') as Restriccion,
+      detalle: fila.detalle ?? ''
+    });
+    this.editando.set(fila);
+  }
+
+  guardar() {
+    const fila = this.editando();
+    if (!fila) return;
+    const f = this.formulario.getRawValue();
+
+    const datos: ConfirmacionRequest = f.asiste
+      ? {
+        asiste: true,
+        cantidad_acompanantes: Number(f.cantidad),
+        restriccion: f.restriccion,
+        detalle_restriccion: this.pideDetalle() ? (f.detalle.trim() || null) : null
+      }
+      : { asiste: false, cantidad_acompanantes: 0, restriccion: 'ninguna', detalle_restriccion: null };
+
+    const llamada = fila.yaConfirmo
+      ? this.confirmationService.actualizarConfirmacionService(fila.codigo, datos)
+      : this.confirmationService.crearConfimacionService(fila.codigo, datos);
+
+    llamada.subscribe({
+      next: () => {
+        this.editando.set(null);
+        this.cargarInvitados();
+      },
+      error: (err) => this.errorEdicion.set(err.error?.error ?? 'No se pudo guardar')
+    });
+  }
+
+  eliminarRespuesta(fila: FilaInvitado) {
+    if (!confirm(`¿Borrar la respuesta de ${fila.nombre}? Volverá a estar pendiente.`)) return;
+    this.guestsService.eliminarConfirmacion(this.eventoId(), fila.id).subscribe({
+      next: () => this.cargarInvitados(),
+      error: (err) => this.errorEdicion.set(err.error?.error ?? 'No se pudo borrar')
     });
   }
 }
