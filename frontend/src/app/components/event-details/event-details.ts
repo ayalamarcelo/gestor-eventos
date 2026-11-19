@@ -1,13 +1,9 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { eventService } from '../../services/event.service';
 import { event } from '../../models/event.model';
-
-const aInputLocal = (iso: string) => {
-  const fecha = new Date(iso);
-  return new Date(fecha.getTime() - fecha.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-};
+import { formatDate } from '@angular/common';
 
 @Component({
   imports: [ReactiveFormsModule],
@@ -18,46 +14,47 @@ const aInputLocal = (iso: string) => {
 export class EventDetails implements OnInit {
   readonly evento = signal<event | null>(null);
   readonly error = signal<string | null>(null);
-  readonly menuAbierto = signal(false);
-
-  private readonly eventService = inject(eventService);
-  private readonly activatedRoute = inject(ActivatedRoute);
-  private readonly router = inject(Router);
-  
   readonly guardando = signal(false);
   readonly exito = signal<string | null>(null);
   readonly errorGuardar = signal<string | null>(null);
 
+  private readonly eventService = inject(eventService);
+  private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly formBuilder = inject(FormBuilder);
+  private id = 0;
 
-  form = new FormGroup({
-    titulo: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.maxLength(120)] }),
-    descripcion: new FormControl('', { nonNullable: true, validators: [Validators.maxLength(500)] }),
-    fecha_hora: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
-    direccion: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.maxLength(200)] })
+  readonly form = this.formBuilder.nonNullable.group({
+    titulo: ['', [Validators.required, Validators.maxLength(120)]],
+    descripcion: ['', [Validators.maxLength(500)]],
+    fecha_hora: ['', [Validators.required]],
+    direccion: ['', [Validators.required, Validators.maxLength(200)]]
   });
 
   ngOnInit(): void {
-    this.cargarEvento();
+    this.activatedRoute.params.subscribe({
+      next: params => {
+        this.id = Number(params['id']);
+        this.cargarEvento();
+      }
+    });
   }
 
-
   cargarEvento() {
-    const id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
-
-    if (!Number.isInteger(id) || id <= 0) {
+    if (!Number.isInteger(this.id) || this.id <= 0) {
       this.error.set('El id del evento no es válido');
       return;
     }
 
     this.error.set(null);
 
-    this.eventService.getById(id).subscribe({
+    this.eventService.getById(this.id).subscribe({
       next: (data) => {
         this.evento.set(data);
         this.form.patchValue({
           titulo: data.titulo,
           descripcion: data.descripcion ?? '',
-          fecha_hora: aInputLocal(data.fecha_hora),
+          fecha_hora: formatDate(data.fecha_hora, "yyyy-MM-dd'T'HH:mm", 'es'),
           direccion: data.direccion
         });
         this.form.markAsPristine();
@@ -100,9 +97,7 @@ export class EventDetails implements OnInit {
       }
     });
   }
-  toggleMenu() {
-    this.menuAbierto.update(v => !v);
-  }
+
   borrar() {
     const eventoActual = this.evento();
     if (!eventoActual) return;
@@ -110,8 +105,14 @@ export class EventDetails implements OnInit {
     if (!confirm(`¿Seguro que querés borrar "${eventoActual.titulo}"? No se puede deshacer.`)) return;
 
     this.eventService.delete(eventoActual.id).subscribe({
-      next: () => this.router.navigate(['/events']),
+      next: () => this.router.navigate(['/eventos']),
       error: (err) => this.errorGuardar.set(err.error?.error ?? 'No se pudo borrar el evento')
     });
+  }
+
+  cancelar() {
+    this.exito.set(null);
+    this.errorGuardar.set(null);
+    this.cargarEvento();
   }
 }

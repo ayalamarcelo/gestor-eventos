@@ -7,6 +7,7 @@
             <span class="etiqueta">Detalle del evento</span>
             <h1 class="titulo">{{ evento()?.titulo }}</h1>
         </div>
+        <button type="button" class="btn-borrar" (click)="borrar()">Borrar evento</button>
     </header>
     <div class="container-error">
         @if (exito()) {
@@ -27,15 +28,6 @@
             <div>
                 <h2 class="tarjeta-titulo">Datos del evento</h2>
                 <p class="tarjeta-sub">Los cambios se reflejan al instante en la invitación.</p>
-            </div>
-            <div class="menu">
-                <button type="button" class="btn-menu" aria-label="Más opciones" (click)="toggleMenu()">⋯</button>
-                @if (menuAbierto()) {
-                <div class="menu-desplegable">
-                    <button type="button" class="menu-item-borrar" (click)="borrar(); toggleMenu()">Borrar
-                        evento</button>
-                </div>
-                }
             </div>
         </div>
 
@@ -76,8 +68,8 @@
             </div>
 
             <div class="acciones">
-                <button type="button" class="btn-secundario" (click)="cargarEvento()">Cancelar</button>
-                <button type="submit" class="btn-principal" [disabled]="guardando()">Guardar cambios</button>
+                <button type="button" class="btn-secundario" [disabled]="form.pristine" (click)="cancelar()">Cancelar</button>
+                <button type="submit" class="btn-principal" [disabled]="form.pristine || guardando()">Guardar cambios</button>
             </div>
         </form>
     </section>

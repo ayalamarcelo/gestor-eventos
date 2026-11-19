@@ -82,6 +82,7 @@ h3 {
   border: 1px solid var(--color-borde);
   border-radius: 6px;
   cursor: pointer;
+  text-decoration: none;
 }
 .boton-verde {
   background: var(--color-verde);

@@ -5,7 +5,7 @@ import { API_URL } from '../api.config';
 import { Invitado } from '../models/guest.model';
 
 @Service()
-export class InvitadoService {
+export class GuestsService {
     private readonly http = inject(HttpClient);
 
     obtenerInvitados(eventoId: string | number): Observable<Invitado[]> {
@@ -18,5 +18,9 @@ export class InvitadoService {
 
     eliminarInvitado(eventoId: string | number, invitadoId: number): Observable<void> {
         return this.http.delete<void>(`${API_URL}/eventos/${eventoId}/invitados/${invitadoId}`);
+    }
+
+    eliminarConfirmacion(eventoId: number, invitadoId: number): Observable<void> {
+        return this.http.delete<void>(`${API_URL}/eventos/${eventoId}/invitados/${invitadoId}/confirmacion`);
     }
 }
