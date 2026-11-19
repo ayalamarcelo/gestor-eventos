@@ -2,7 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { toDataURL } from 'qrcode';
-import { InvitadoService } from '../../services/guests.service';
+import { GuestsService } from '../../services/guests.service';
 import { Invitado } from '../../models/guest.model';
 import { eventService } from '../../services/event.service';
 import { event } from '../../models/event.model';
@@ -16,7 +16,7 @@ import { DatePipe } from '@angular/common';
 })
 
 export class Invitados implements OnInit {
-    private readonly invitadoService = inject(InvitadoService);
+    private readonly guestsService = inject(GuestsService);
     private readonly activatedRoute = inject(ActivatedRoute);
     private readonly formBuilder = inject(FormBuilder);
     private readonly eventService = inject(eventService);
@@ -47,7 +47,7 @@ export class Invitados implements OnInit {
 
     cargarInvitados(): void {
         this.cargando.set(true);
-        this.invitadoService.obtenerInvitados(this.eventoId).subscribe({
+        this.guestsService.obtenerInvitados(this.eventoId).subscribe({
             next: data => {
                 this.invitados.set(data);
                 this.cargando.set(false);
@@ -66,7 +66,7 @@ export class Invitados implements OnInit {
             return;
         }
         const { nombre } = this.formulario.getRawValue();
-        this.invitadoService.crearInvitado(this.eventoId, nombre.trim()).subscribe({
+        this.guestsService.crearInvitado(this.eventoId, nombre.trim()).subscribe({
             next: () => {
                 this.formulario.reset();
                 this.mostrarFormulario.set(false);
@@ -81,7 +81,7 @@ export class Invitados implements OnInit {
         const confirmar = confirm(`¿Eliminar la invitación de "${invitado.nombre}"? Si ya confirmó, también se borra su respuesta.`);
         if (!confirmar) return;
 
-        this.invitadoService.eliminarInvitado(this.eventoId, invitado.id).subscribe({
+        this.guestsService.eliminarInvitado(this.eventoId, invitado.id).subscribe({
             next: () => {
                 this.error.set(null);
                 this.invitados.update(lista => lista.filter(i => i.id !== invitado.id));

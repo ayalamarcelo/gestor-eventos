@@ -95,6 +95,71 @@
 
       </header>
 
+      @if (errorEdicion() && !editando()) {
+      <div class="text-danger mb-2">{{ errorEdicion() }}</div>
+      }
+
+      @if (editando(); as fila) {
+      <div class="modal d-block" tabindex="-1" role="dialog" aria-modal="true" style="background: rgba(0, 0, 0, 0.5)">
+        <div class="modal-dialog modal-dialog-centered">
+          <form class="modal-content" [formGroup]="formulario" (ngSubmit)="guardar()">
+
+            <div class="modal-header">
+              <h3 class="modal-title h5">Respuesta de {{ fila.nombre }}</h3>
+              <button type="button" class="btn-close" aria-label="Cerrar" (click)="editando.set(null)"></button>
+            </div>
+
+            <div class="modal-body">
+              <fieldset class="mb-3">
+                <legend class="form-label fs-6">¿Asiste?</legend>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="asiste-si" formControlName="asiste" [value]="true">
+                  <label class="form-check-label" for="asiste-si">Sí, asiste</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" id="asiste-no" formControlName="asiste" [value]="false">
+                  <label class="form-check-label" for="asiste-no">No asiste</label>
+                </div>
+              </fieldset>
+
+              @if (formulario.controls.asiste.value) {
+              <label for="cantidad" class="form-label">Acompañantes</label>
+              <select id="cantidad" class="form-select mb-2" formControlName="cantidad">
+                @for (n of opcionesAcompanantes; track n) {
+                <option [ngValue]="n">{{ n }}</option>
+                }
+              </select>
+
+              <label for="restriccion" class="form-label">Restricción alimentaria</label>
+              <select id="restriccion" class="form-select mb-2" formControlName="restriccion">
+                <option value="ninguna">Ninguna</option>
+                <option value="vegetariano">Vegetariano</option>
+                <option value="celiaco">Celíaco</option>
+                <option value="alergia">Alergia</option>
+                <option value="otra">Otra</option>
+              </select>
+
+              @if (pideDetalle()) {
+              <label for="detalle" class="form-label">Detalle (opcional)</label>
+              <input id="detalle" type="text" maxlength="200" class="form-control mb-2" formControlName="detalle">
+              }
+              }
+
+              @if (errorEdicion()) {
+              <div class="text-danger">{{ errorEdicion() }}</div>
+              }
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-secondary" (click)="editando.set(null)">Cancelar</button>
+              <button type="submit" class="btn btn-success">Guardar</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+      }
+
       <table class="tabla-invitados">
         <thead>
           <tr>
@@ -102,6 +167,7 @@
             <th scope="col">ACOMPAÑANTES</th>
             <th scope="col">RESTRICCIÓN</th>
             <th scope="col">ESTADO</th>
+            <th scope="col">ACCIONES</th>
           </tr>
         </thead>
         <tbody>
@@ -116,6 +182,14 @@
             <td>{{ invitado.acompanantes }}</td>
             <td><span class="badge-tag">{{ invitado.restriccion || 'Estándar' }}</span></td>
             <td><span class="estado-badge" [ngClass]="invitado.estado.toLowerCase()">{{ invitado.estado }}</span></td>
+            <td>
+              <button class="btn btn-sm btn-outline-secondary" (click)="editar(invitado)">
+                {{ invitado.yaConfirmo ? 'Editar' : 'Completar respuesta' }}
+              </button>
+              @if (invitado.yaConfirmo) {
+              <button class="btn btn-sm btn-outline-danger ms-1" (click)="eliminarRespuesta(invitado)">Borrar</button>
+              }
+            </td>
           </tr>
           } @empty {
           <tr>
